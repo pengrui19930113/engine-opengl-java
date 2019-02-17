@@ -1,1 +1,30 @@
 // fragment 片段着色器才能对纹理进行采样操作，顶点着色器 只能传递一下纹理坐标
+
+// vertex shader decide the 1.vertex positions 2.decide 
+
+//fragment shader decide the per pixel color 
+
+// cartoon shader
+void mian(void){
+	vec4 textureColor = texture(texture_diffuse,pass_TextureCoord);
+	
+	if(matCount>1.5){
+		if(textureColor.a>0.75){
+		
+		}else if(textureColor.a>0.5){
+			textureColor = textureColor*vec4(colorMat1,1.0);
+		}else if(textureColor.a>0.25){
+			textureColor = textureColor*vec4(colorMat2,1.0);
+		}
+	}else if(matCount>0.5){
+		if(textureColor.a>0.75){
+		
+		}else if(textureColor.a>0.5){
+			textureColor = textureColor*vec4(colorMat1,1.0);
+		}
+	}
+	
+	if(blendingOn<0.5&& textureColor.a<0.5){
+		discard;
+	}
+}
