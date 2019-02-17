@@ -68,8 +68,8 @@ public class GameMainLoop {
 	}
 	
 	public static void main(String[] args) throws IOException {
-//		gaming();
-		main3();
+		gaming();
+//		main3();
 	}
 	
 	static void main3(){

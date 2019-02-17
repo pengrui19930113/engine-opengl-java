@@ -1,8 +1,14 @@
-this is a java graphic engin(no audio code)
+this is a java graphic engin(no audio code now)
 
+run print exception about -Djava.library.path  please add the native library support . same that
+toolbar->Run->Run Configurations...->java Application->Arguements->VM arguements 
+-Djava.library.path="F:\.m2\repository\org\lwjgl\lwjgl\lwjgl-platform\2.9.3\lwjgl-platform-2.9.3-natives-windows"
 
+my platform library path as the "F:\.m2\repository\org\lwjgl\lwjgl\lwjgl-platform\2.9.3\lwjgl-platform-2.9.3-natives-windows"
 
-
+启动的时候会报错是因为没有指定本地依赖的动态库
+在虚拟机运行配置选项里面的 加上
+-Djava.library.path="F:\.m2\repository\org\lwjgl\lwjgl\lwjgl-platform\2.9.3\lwjgl-platform-2.9.3-natives-windows"
 
 // vertex shader decide the 1.vertex positions 2.decide 
 
