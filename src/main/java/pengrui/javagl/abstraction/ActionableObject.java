@@ -35,14 +35,14 @@ public abstract class ActionableObject implements Actionable{
 			children = new LinkedList<>();
 		
 		children.add(child);
-		child.setActionParent(this);
+		child.setActionableParent(this);
 	}
 	@Override
-	public Actionable getActionParent() {
+	public Actionable getActionableParent() {
 		return parent;
 	}
 	@Override
-	public void setActionParent(Actionable parent) {
+	public void setActionableParent(Actionable parent) {
 		this.parent = parent;
 	}
 	@Override

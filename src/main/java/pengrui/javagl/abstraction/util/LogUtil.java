@@ -87,7 +87,7 @@ public class LogUtil {
 	public static void reline(){
 		log.reline();
 	}
-	public static final LogAdapter log;
+	static final LogAdapter log;
 	
 	static{
 		log = new LogAdapter();

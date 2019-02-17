@@ -131,11 +131,11 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 		this.shader.unuseShader();
 	}
 	@Override
-	public Actionable getActionParent() {
+	public Actionable getActionableParent() {
 		return null;
 	}
 	@Override
-	public void setActionParent(Actionable parent) {
+	public void setActionableParent(Actionable parent) {
 		
 	}
 	@Override
@@ -322,5 +322,25 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 	public boolean isEnableAnimation() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public int getActionDepth() {
+		return 1;
+	}
+
+	@Override
+	public void setActionDepth(int d) {
+		
+	}
+
+	@Override
+	public int getDrawDepth() {
+		return 1;
+	}
+
+	@Override
+	public void setDrawDepth(int d) {
+		
 	}
 }

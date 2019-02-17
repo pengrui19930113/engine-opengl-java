@@ -13,7 +13,7 @@ public abstract class AbstractLifecycleManager implements ILifecyclableManager{
 	}
 
 	@Override
-	public void remove(Lifecyclable bean) {
+	public void unregister(Lifecyclable bean) {
 		ILifecyclableManager.remove(this, bean);
 	}
 

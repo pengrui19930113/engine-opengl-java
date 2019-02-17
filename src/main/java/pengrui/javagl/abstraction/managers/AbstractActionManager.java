@@ -17,8 +17,8 @@ public abstract class AbstractActionManager implements IActionableManager{
 	}
 
 	@Override
-	public void remove(Actionable bean) {
-		IActionableManager.remove(this, bean);
+	public void unregister(Actionable bean) {
+		IActionableManager.unregister(this, bean);
 	}
 
 	@Override

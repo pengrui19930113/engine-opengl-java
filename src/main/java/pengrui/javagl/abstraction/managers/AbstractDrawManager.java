@@ -16,8 +16,8 @@ public abstract class AbstractDrawManager implements IDrawableManager{
 	}
 
 	@Override
-	public void remove(Drawable bean) {
-		IDrawableManager.remove(this, bean);
+	public void unregister(Drawable bean) {
+		IDrawableManager.unregister(this, bean);
 	}
 
 	@Override

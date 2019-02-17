@@ -3,20 +3,32 @@ package pengrui.javagl.abstraction.managers;
 import org.lwjgl.opengl.GL11;
 
 import pengrui.javagl.abstraction.cores.Drawable;
+import pengrui.javagl.abstraction.util.LogUtil;
 
 public interface IDrawableManager extends Manageable<Drawable>{
+
 	void draws();
 	
-	public static void remove(IDrawableManager dm,Drawable bean) {
-		Manageable.checkManager(dm);
-		dm.getAll().remove(bean);
-	}
-	
 	public static void register(IDrawableManager dm,Drawable bean) {
-		Manageable.checkManager(dm);
-		dm.getAll().add(bean);
+		if(1 == bean.getDrawDepth()){
+			Manageable.register(dm, bean);
+		}else{
+			LogUtil.debug("is not one level object, ignore register");
+		}
 	}
 	
+	public static void unregister(IDrawableManager dm,Drawable bean) {
+		if(1 == bean.getDrawDepth()){
+			Manageable.unregister(dm, bean);
+		}else{
+			LogUtil.debug("is not one level object, ignore remove");
+		}
+	}
+	
+	public static void destroy(IDrawableManager am){
+		Manageable.destroy(am);
+	}
+
 	public static void draws(IDrawableManager dm) {
 		Manageable.checkManager(dm);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT
@@ -24,9 +36,6 @@ public interface IDrawableManager extends Manageable<Drawable>{
 				);
 		
 		for (Drawable drawable : dm.getAll()) {
-			if(drawable.isEnableDrawChildren())
-				drawable.draws();
-			
 			if(drawable.isEnableDraw())
 				drawable.onDraw();
 		}

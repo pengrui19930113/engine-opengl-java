@@ -16,8 +16,8 @@ public abstract class AbstractInputManager implements IInputableManager{
 	}
 
 	@Override
-	public void remove(Inputable bean) {
-		IInputableManager.remove(this, bean);
+	public void unregister(Inputable bean) {
+		IInputableManager.unregister(this, bean);
 	}
 	
 	@Override

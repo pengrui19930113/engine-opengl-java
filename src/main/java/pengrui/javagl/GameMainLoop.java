@@ -74,7 +74,6 @@ public class GameMainLoop {
 	
 	static void main3(){
 		System.getProperties().entrySet().forEach(LogUtil::info);
-		System.out.println(System.getProperties().get("path.separator"));
 	}
 	/**
 	 * 游戏框架大致流程  

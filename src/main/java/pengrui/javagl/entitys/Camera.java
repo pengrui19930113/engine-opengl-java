@@ -92,4 +92,17 @@ public class Camera extends ActionableObject{
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
+	@Override
+	public int getActionDepth() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
+	@Override
+	public void setActionDepth(int d) {
+		// TODO Auto-generated method stub
+		
+	}
 }
