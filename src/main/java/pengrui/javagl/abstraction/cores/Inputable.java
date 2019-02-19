@@ -35,7 +35,6 @@ public interface Inputable{
 	}
 	
 	public static void inputs(Inputable input,IEvent evn){
-		
 		if(
 				null == input 
 				|| null == evn //事件处理源 或 事件为空 则不处理

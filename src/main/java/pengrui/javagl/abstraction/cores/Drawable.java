@@ -24,8 +24,6 @@ public interface Drawable{
 	
 	Shaderable getShader();
 	void setShader(Shaderable shader);
-	boolean isEnableCulling();
-	void senEnableCulling();
 	
 	public static void draws(Drawable draw){
 		if(null == draw){

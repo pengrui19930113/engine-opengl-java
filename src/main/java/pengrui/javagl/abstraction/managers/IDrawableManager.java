@@ -22,7 +22,7 @@ public interface IDrawableManager extends Manageable<Drawable>{
 	void draws();
 	
 	public static void register(IDrawableManager dm,Drawable bean) {
-		if(1 == ((HasChildrenable<?>)bean).getDepth()){
+		if(HasChildrenable.isOneLevelBean(bean)){
 			Manageable.register(dm, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore register");
@@ -30,7 +30,7 @@ public interface IDrawableManager extends Manageable<Drawable>{
 	}
 	
 	public static void unregister(IDrawableManager dm,Drawable bean) {
-		if(1 == ((HasChildrenable<?>)bean).getDepth()){
+		if(HasChildrenable.isOneLevelBean(bean)){
 			Manageable.unregister(dm, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore remove");
@@ -48,7 +48,7 @@ public interface IDrawableManager extends Manageable<Drawable>{
 				);
 		
 		for (Drawable drawable : dm.getAll()) {
-				drawable.onDraw();
+				drawable.draws();
 		}
 	}
 	

@@ -17,45 +17,31 @@ import pengrui.javagl.abstraction.cores.Drawable;
 import pengrui.javagl.abstraction.cores.Lifecyclable;
 import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
 import pengrui.javagl.abstraction.factorys.DrawManagerFactory;
-import pengrui.javagl.abstraction.models.VaoPair;
+import pengrui.javagl.abstraction.models.ModelData;
+import pengrui.javagl.abstraction.models.SpaceData;
+import pengrui.javagl.abstraction.shaders.IShaderableManager;
 import pengrui.javagl.abstraction.shaders.Shaderable;
-import pengrui.javagl.abstraction.util.LoaderUtil;
 import pengrui.javagl.abstraction.util.LogUtil;
 import pengrui.javagl.abstraction.util.MatrixUtil;
-import pengrui.javagl.abstraction.util.ResourceUtil;
-import pengrui.javagl.shader.ShaderImpl;
-import pengrui.javagl.texture.ImageType;
 
 public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable,Lifecyclable{
 	
 	public GameModel(){
-		this((Vector3f)null);
+		this(SpaceData.cache,ModelData.cache);
 	}
 	
-	public GameModel(Vector3f position){
-		this(position,null);
-	}
-	public <T extends Shaderable> GameModel(Shaderable shader){
-		this(null,shader);
-	}
-	
-	public  <T extends Shaderable>GameModel(Vector3f pos,Shaderable shader){
-		this(pos,null,shader);
-	}
-	public  <T extends Shaderable>GameModel(Vector3f pos,Vector3f rot,Shaderable shader){
-		this(pos,rot,null,shader);
-	} 
-	
-	public  <T extends Shaderable>GameModel(Vector3f pos,Vector3f rot,Vector3f scale,Shaderable shader) {
+	public  <T extends Shaderable>GameModel(SpaceData sd,ModelData md) {
 		DrawManagerFactory.getInstance().register(this);
 		ActionManagerFactory.getInstance().register(this);
-		position = pos;
-		rotation = rot;
-		this.scale = scale;
-		textureID = textureCache;
+		vaoID = md.vaoID;
+		vertexCount = md.vertexCount;
+		textureID = md.textureID;
+		shader = md.shader;
+		position = sd.position;
+		rotation = sd.rotation;
+		scale = sd.scale;
 		shineDamper = 10;
 		reflectivity = 1;
-		this.shader = shader;
 		innerInit();//未完成初始化的变量进行初始化
 	}
 	void innerInit(){
@@ -69,25 +55,18 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 			scale = new Vector3f(1,1,1);
 		
 		if(null == shader){
-			shader = shaderCache;
+			shader = IShaderableManager.cache;
 			LogUtil.debug("use default shader");
 		}
 		
 		shader.loadOnceGlslVaraibles();
 	}
 	
-	public static int vaoID;
-	public static int vertexCount;
-	public static int textureCache;
+	public int vaoID;
+	public int vertexCount;
 	
 	int shineDamper;
 	int reflectivity;
-	static{
-		VaoPair vp =LoaderUtil.loadObjModel(ResourceUtil.getResource("loader/box.obj"));
-		vaoID = vp.vaoID;
-		vertexCount = vp.indices;
-		textureCache = LoaderUtil.loadTexture(ResourceUtil.getResource("texture/box.png"), ImageType.PNG);
-	}
 	
 	int textureID;
 	Vector3f position;
@@ -95,7 +74,6 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 	
 	Vector3f scale;
 	Shaderable shader;
-	static final Shaderable shaderCache = new ShaderImpl(ResourceUtil.getResource("shader/lightvs"),ResourceUtil.getResource("shader/lightfs"));
 	
 	protected Object[] assembleGlslVaraible(){
 		if(null == glslVaraibleHolder)
@@ -182,9 +160,8 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 		
 	}
 	@Override
-	public void draws() {
-		// TODO Auto-generated method stub
-		
+	public final void draws() {
+		Drawable.draws(this);
 	}
 	@Override
 	public boolean isEnableDrawChildren() {
@@ -204,18 +181,6 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 	public void destroy() {
 		GL30.glDeleteVertexArrays(vaoID);
 		shader.cleanup();
-	}
-
-	@Override
-	public boolean isEnableCulling() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void senEnableCulling() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -296,9 +261,8 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 	}
 
 	@Override
-	public void actions(long delteTime) {
-		// TODO Auto-generated method stub
-		
+	public final void actions(long delteTime) {
+		Actionable.actions(this,delteTime);
 	}
 
 	@Override
@@ -318,11 +282,6 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 		
 	}
 
-	@Override
-	public boolean hasAnimatation() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public Collection<Animationable> getAnimations() {
@@ -331,14 +290,20 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 	}
 
 	@Override
-	public void setAnimation(Animationable animation) {
+	public void addAnimation(Animationable animation) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public boolean isEnableAnimation() {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public void setEnableAnimation(boolean en) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

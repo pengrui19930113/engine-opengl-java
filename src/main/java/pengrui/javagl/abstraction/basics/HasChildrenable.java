@@ -57,32 +57,85 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 		}
 	}
 
+	public static boolean isOneLevelBean(Object bean){
+		if(CheckUtil.paramNotNull(bean)){
+			if(!(bean instanceof HasChildrenable))
+				ExceptionUtil.throwRuntimeException("the bean must be implements HasChildrenable");
+			
+			return 1 == ((HasChildrenable<?>)bean).getDepth();
+		}else{
+			ExceptionUtil.throwRuntimeException("in param is null");
+			return false;
+		}
+	}
+	/**
+	 * 如果parent 的子孙节点有多个 child(同一个对象) ，则全部移除
+	 * @param parent
+	 * @param child
+	 */
 	public static <G extends HasChildrenable<G>> void removeChild(G parent, G child) {
-		if(CheckUtil.paramsAllNotNull(parent,child)){
+		removeChild(parent,child,true,true);
+	}
+	
+	/**
+	 * 
+	 * @param parent
+	 * @param child
+	 * @param depthProcessChildren 是否递归查找子孙节点移除child
+	 * @param removeAllSameLayerSameChild 是否移除同一父节点中所有子节点相同的child 如果 false 则只移出第一个找到的 如果是true 则移除该父节点相同的child子节点
+	 */
+	public static <G extends HasChildrenable<G>> 
+		void removeChild(G parent
+				,G child
+				,boolean depthProcessChildren
+				,boolean removeAllSameLayerSameChild) {
+		if(!CheckUtil.paramsAllNotNull(parent,child)){
+			LogUtil.debug(
+					String.format("remove child param invalid,%s", getClassInfo(parent.getClass(), child.getClass())));
+			return;
+		}
+		
+		List<G> childs = new LinkedList<G>(); // 如果只是单线程的话这里还可以优化为静态成员变量，并且 加上懒加载 ， 让所有的需要深度处理子孙节点的函数 共用这两个容器
+		List<G> tmps = new LinkedList<G>();
+		childs.add(parent);
+		
+		boolean clearupSameLayerChild = false;
+		LABEL1:
+		for(;;){
+			if(childs.isEmpty())
+				break;
 			
-			List<G> childs = new LinkedList<G>();
-			List<G> tmps = new LinkedList<G>();
-			childs.add(parent);
-			
-			for(;;){
-				if(childs.isEmpty())
-					break;
-				
-				tmps.clear();
-				for(G c:childs){
-					if(c.getChildren().contains(child)){
+			tmps.clear();
+			LABEL2:
+			for(G c:childs){
+					LABEL3:
+					while(c.getChildren().contains(child)){// 如果是可重复容器，则循环移除child
 						c.getChildren().remove(child);
-						continue;
+						if(depthProcessChildren&&removeAllSameLayerSameChild){
+							continue;
+						}else if(!depthProcessChildren&&removeAllSameLayerSameChild){
+							clearupSameLayerChild = true;
+							continue ;
+						}else if(depthProcessChildren&&!removeAllSameLayerSameChild){
+							break LABEL3;
+						}else if(!depthProcessChildren&&!removeAllSameLayerSameChild){
+							break LABEL1;
+						}							
 					}
 					tmps.addAll(c.getChildren());
-				}
-				childs.clear();
+			}
+			if(clearupSameLayerChild){
+				break LABEL1;
+			}
+			childs.clear();
+			for(G cc:tmps){
+				childs.addAll(cc.getChildren());
 			}
 		}
 	}
+	
 	public static <G extends HasChildrenable<G>> void setParent(G child, G parent) {
-
-		if (null == child || null == parent) {
+		if(!CheckUtil.paramsAllNotNull(child,parent)){
 			LogUtil.debug(
 					String.format("set parent param invalid,%s", getClassInfo(parent.getClass(), child.getClass())));
 			return;
@@ -106,20 +159,18 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 	}
 
 	/**
-	 * 假如 child 是parent 的子孙元素 则不会添加
+	 * 假如 child 是parent 的子元素 则不会添加(不会深度查询子孙元素)
 	 * @param parent
 	 * @param child
 	 */
 	public static <G extends HasChildrenable<G>> void addChild(G parent, G child) {
-		if (null == child || null == parent) {
-			LogUtil.debug("add child param invalid");
+		if(!CheckUtil.paramsAllNotNull(parent,child))
 			return;
-		}
 
-		if (parent.hasTheChild(child)) {
-			DebugUtil.depthMessage("child's depth parent's class", child.getDepth(), parent.getClass());// TODO
-		} else {
+		if (!hasTheChild(parent,child,false)) {
 			parent.addChild(child);
+		} else {
+			DebugUtil.depthMessage("child's depth parent's class", child.getDepth(), parent.getClass());
 		}
 	}
 
@@ -130,21 +181,48 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 	 * @return
 	 */
 	public static <G extends HasChildrenable<G>> boolean hasTheChild(G parent, G child) {
+		return hasTheChild(parent,child,true);
+	}
+	
+	/**
+	 * 
+	 * @param parent
+	 * @param child
+	 * @param deepthSearch 是否深度查询子孙节点包含child
+	 * @return
+	 */
+	public static <G extends HasChildrenable<G>> boolean hasTheChild(G parent, G child,boolean deepthSearch) {
 		if (null == child || null == parent) {
 			LogUtil.debug("test has the child param invalid");
 			ExceptionUtil.throwRuntimeException("test has the child param invalid");
 		}
-		if (parent.getChildren().contains(child)) {
-			return true;
-		} else {
-			for (G c : parent.getChildren())
-				if (c.hasTheChild(child))
+		
+		List<G> childs = new LinkedList<G>();
+		List<G> tmps = new LinkedList<G>();
+		childs.add(parent);
+		for(;;){
+			if(childs.isEmpty())
+				break;
+			
+			tmps.clear();
+			for(G c:childs){
+				if(c.getChildren().contains(child)){
 					return true;
+				}
+				if(!deepthSearch){
+					return false;
+				}
+				tmps.addAll(c.getChildren());
+			}
+			childs.clear();
+			for(G cc:tmps){
+				childs.addAll(cc.getChildren());
+			}
 		}
-
 		return false;
 	}
 
+	
 	public static <G extends HasChildrenable> void printTree(G hasChildrenable) {
 		if (!CheckUtil.paramNotNull(hasChildrenable))
 			return;
@@ -170,7 +248,16 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 		}
 	}
 
-	public static <G extends HasChildrenable<G>> void checkAndPrintTree(G hasChildrenable) {
+	/**
+	 * 找到该节点的最上级父节点并打印整棵树
+	 * 如果找到
+	 * @param hasChildrenable
+	 */
+	public static <G extends HasChildrenable<G>> 
+		void findTopLevelNodeAndCheckItIsOneLevelNodeAndPrintTree
+			(G hasChildrenable
+				,boolean throwExceptionIfErrorRaletive) {
+		
 		if (!CheckUtil.paramNotNull(hasChildrenable))
 			return;
 
@@ -183,9 +270,13 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 				continue;
 		} while (null != (lastLater = hasChildrenable.getParent()));
 
-		if (last.getDepth() > 1) {
-			printTree(last);
-			ExceptionUtil.throwRuntimeException("error raletive");
+		if (last.getDepth() != 1) {
+			if(throwExceptionIfErrorRaletive){
+				printTree(last);
+				ExceptionUtil.throwRuntimeException("error raletive");
+			}else{
+				LogUtil.error("the depth of the top level node is not 1");
+			}
 		}
 		printTree(last);
 	}

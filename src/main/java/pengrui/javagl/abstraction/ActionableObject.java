@@ -92,18 +92,14 @@ public class ActionableObject implements Actionable,HasChildrenable<ActionableOb
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public boolean hasAnimatation() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 	@Override
 	public Collection<Animationable> getAnimations() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public void setAnimation(Animationable animation) {
+	public void addAnimation(Animationable animation) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -111,5 +107,10 @@ public class ActionableObject implements Actionable,HasChildrenable<ActionableOb
 	public boolean isEnableAnimation() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	@Override
+	public void setEnableAnimation(boolean en) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -7,12 +7,16 @@ import pengrui.javagl.abstraction.util.CheckUtil;
 
 public interface Manageable<T> extends Lifecyclable {
 	
+	/**
+	 * 当前设计register 所注册的管理对象必须是1级别的 否则抛异常 后续可能更改
+	 * @param bean
+	 */
 	void register(T bean);
 	void unregister(T bean);
 	Collection<T> getAll();
 	void init(); // by Lifecyclable
 	void destroy();// by Lifecyclable
-
+	
 	public static void checkManager(Manageable<?> m) {
 		if (null == m || null == m.getAll())
 			throw new RuntimeException(

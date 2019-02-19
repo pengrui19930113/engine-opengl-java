@@ -13,4 +13,6 @@ public class VaoPair {
 		this.vaoID = vaoID;
 		this.indices = indices;
 	}
+	
+	public static final VaoPair cache = IModelableManager.vp;
 }

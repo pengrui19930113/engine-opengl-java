@@ -27,12 +27,7 @@ public interface IActionableManager extends Manageable<Actionable>{
 	
 	public static <T extends Actionable>
 		void register(IActionableManager am,Actionable bean){
-		if(null == bean){
-			LogUtil.debug("bean is null,ignore register");
-			return;
-		}
-		
-		if(1 == ((HasChildrenable<?>)bean).getDepth()){
+		if(HasChildrenable.isOneLevelBean(bean)){
 			Manageable.register(am, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore register");
@@ -40,16 +35,11 @@ public interface IActionableManager extends Manageable<Actionable>{
 	}
 	
 	public static void unregister(IActionableManager am,Actionable bean){
-		
-		if(null == bean){
-			LogUtil.debug("bean is null,ignore remove");
-			return;
-		}
-//		if(1 == bean.getDepth((T)null)){
+		if(HasChildrenable.isOneLevelBean(bean)){
 			Manageable.unregister(am, bean);
-//		}else{
-//			LogUtil.debug("is not one level object, ignore remove");
-//		}
+		}else{
+			LogUtil.debug("is not one level object, ignore remove");
+		}
 	}
 	
 	public static void destroy(IActionableManager am){
@@ -62,8 +52,8 @@ public interface IActionableManager extends Manageable<Actionable>{
 		if(delteTime < 0)
 			LogUtil.info("warning! the delte time is less than zero");
 		
-		for (Actionable actionable : am.getAll()) 
-				actionable.onAction(delteTime);
-		
+		for(Actionable a:am.getAll()){
+			a.actions(delteTime);
+		}
 	}
 }

@@ -5,6 +5,8 @@ public class GlobalConfig {
 	public static boolean GLOBAL_DEBUG_ENABLE = true;
 	//全局info日志使能开关
 	public static boolean GLOBAL_INFO_ENABLE = true;
+	//关于渲染对象深度信息日志打印开关
+	public static boolean DEPTH_INFO_ENABLE = true;
 
 	//着色器日志使能开关
 	public static boolean SHADER_DEBUG_ENABLE = true;

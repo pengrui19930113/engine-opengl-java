@@ -22,8 +22,9 @@ public interface IInputableManager extends Manageable<Inputable>{
 	@Override
 	void destroy();// by Lifecyclable
 	void inputs();//捕获事件 然后分发事件
+	
 	public static void register(IInputableManager im,Inputable bean) {
-		if(1 == ((HasChildrenable<?>)bean).getDepth()){
+		if(HasChildrenable.isOneLevelBean(bean)){
 			Manageable.register(im, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore register");
@@ -31,7 +32,7 @@ public interface IInputableManager extends Manageable<Inputable>{
 	}
 
 	public static void unregister(IInputableManager im,Inputable bean) {
-		if(1 == ((HasChildrenable<?>)bean).getDepth()){
+		if(HasChildrenable.isOneLevelBean(bean)){
 			Manageable.unregister(im, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore unregister");

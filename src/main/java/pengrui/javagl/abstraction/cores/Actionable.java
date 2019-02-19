@@ -5,6 +5,7 @@ import java.util.Collection;
 import pengrui.javagl.abstraction.animation.Animationable;
 import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.util.DebugUtil;
+import pengrui.javagl.abstraction.util.GlobalConfig;
 import pengrui.javagl.abstraction.util.LogUtil;
 
 /**
@@ -23,10 +24,10 @@ public interface Actionable {
 	boolean isEnableChildrenAction();
 	void setEnableChildrenAction(boolean en);
 	
-	boolean hasAnimatation();
-	Collection<Animationable> getAnimations();
-	void setAnimation(Animationable animation);
 	boolean isEnableAnimation();
+	void setEnableAnimation(boolean en);
+	Collection<Animationable> getAnimations();
+	void addAnimation(Animationable animation);
 	
 	public static void actions(Actionable action,long delteTime){
 		
@@ -51,7 +52,8 @@ public interface Actionable {
 			}
 		}
 		
-		DebugUtil.depthInfo(((HasChildrenable<?>)action).getDepth(), action.getClass());
+		if(GlobalConfig.DEPTH_INFO_ENABLE)
+			DebugUtil.depthInfo(((HasChildrenable<?>)action).getDepth(), action.getClass());
 		
 		if(action.isEnableAction()){
 			

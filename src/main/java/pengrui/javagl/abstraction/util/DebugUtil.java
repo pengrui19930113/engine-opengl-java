@@ -22,6 +22,8 @@ public class DebugUtil {
 			,Class<?> clazz
 			,String sign
 			,int logLevel){
+		if(depth<needPrintDeepth)
+			return;
 		
 		msg = null==msg?"":msg;
 		sign = null==sign?"#":sign;
