@@ -1,7 +1,7 @@
 package pengrui.javagl.abstraction.datas.impl;
 
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import pengrui.javagl.abstraction.basics.Vector3f;
+import pengrui.javagl.abstraction.basics.Vector4f;
 
 import pengrui.javagl.abstraction.datas.Colorable;
 
@@ -20,14 +20,10 @@ public class Color implements Colorable{
 		return r;
 	}
 	public Vector4f member;
-	@Override
-	public Vector4f get(Vector4f... params) {
-		return member;
-	}
 	
 	@Override
 	public Vector4f get() {
-		return get((Vector4f[])null);
+		return member;
 	}
 	
 	@Override

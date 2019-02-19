@@ -6,4 +6,8 @@ public class ExceptionUtil {
 		if(null == obj)
 			throw new RuntimeException(msg);
 	}
+	
+	public static void throwRuntimeException(String msg)throws RuntimeException{
+		throw new RuntimeException(msg);
+	}
 }

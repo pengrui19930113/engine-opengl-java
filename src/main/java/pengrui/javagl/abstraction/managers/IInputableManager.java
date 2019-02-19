@@ -1,5 +1,8 @@
 package pengrui.javagl.abstraction.managers;
 
+import java.util.Collection;
+
+import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.cores.Inputable;
 import pengrui.javagl.abstraction.util.LogUtil;
 /**
@@ -8,11 +11,19 @@ import pengrui.javagl.abstraction.util.LogUtil;
  *
  */
 public interface IInputableManager extends Manageable<Inputable>{
-	
+	@Override
+	void register(Inputable bean);// by Manageable
+	@Override
+	void unregister(Inputable bean);// by Manageable
+	@Override
+	Collection<Inputable> getAll();// by Manageable
+	@Override
+	void init(); // by Lifecyclable
+	@Override
+	void destroy();// by Lifecyclable
 	void inputs();//捕获事件 然后分发事件
-	
 	public static void register(IInputableManager im,Inputable bean) {
-		if(1 == bean.getInputDepth()){
+		if(1 == ((HasChildrenable<?>)bean).getDepth()){
 			Manageable.register(im, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore register");
@@ -20,7 +31,7 @@ public interface IInputableManager extends Manageable<Inputable>{
 	}
 
 	public static void unregister(IInputableManager im,Inputable bean) {
-		if(1 == bean.getInputDepth()){
+		if(1 == ((HasChildrenable<?>)bean).getDepth()){
 			Manageable.unregister(im, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore unregister");
@@ -32,11 +43,10 @@ public interface IInputableManager extends Manageable<Inputable>{
 	}
 	
 	public static void inputs(IInputableManager im) {
-		// 通常每个场景的输入处理都不太一样 //TODO
-		Manageable.checkManager(im);
-		for (Inputable input : im.getAll()) 
-			if(input.isEnableInput())
-				im.inputs();
+//		Manageable.checkManager(im);
+//		for (Inputable input : im.getAll()) 
+//				input.inputs(null);//TODO
+//		// 通常每个场景的输入处理都不太一样 //TODO
 		
 	}
 

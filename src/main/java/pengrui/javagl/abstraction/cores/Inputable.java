@@ -2,6 +2,7 @@ package pengrui.javagl.abstraction.cores;
 
 import java.util.Collection;
 
+import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.events.AbstractEvent;
 import pengrui.javagl.abstraction.events.IEvent;
 import pengrui.javagl.abstraction.events.IEventManager;
@@ -13,21 +14,15 @@ import pengrui.javagl.abstraction.util.LogUtil;
  * @author Administrator
  *
  */
-public interface Inputable {
+@SuppressWarnings("unchecked")
+public interface Inputable{
 	
-	Inputable getInputableParent();
-	void setInputableParent(Inputable parent);
 	boolean isEnableInput();
 	void setEnableInput(boolean en);
 	void inputs(IEvent evn);
 	void onInput(IEvent evn);
 	boolean isEnableChildrenInput();
 	void setEnableChildrenInput(boolean en);
-	Collection<Inputable> getInputableChildren();
-	void addInpuablChild(Inputable input);
-	void removeInputableChild(Inputable input);
-	int getInputDepth();
-	void setInputDepth(int d);
 	/**
 	 * {@link Inputable#onInput(AbstractEvent)}
 	 * @param bean 
@@ -53,35 +48,26 @@ public interface Inputable {
 			LogUtil.debug("input param invalid");
 			return ;
 		}
+		if(!(input instanceof HasChildrenable)){
+			LogUtil.info("draw not instance of the HasChildrenable ,return");
+			return;
+		}
 		
-		Collection<Inputable> children = input.getInputableChildren();
-		if(null!=children && !children.isEmpty()&&input.isEnableChildrenInput())
-			for (Inputable child : children) 
+		Collection<Inputable> children = (Collection<Inputable>)((HasChildrenable<?>)input).getChildren();
+		if(null!=children && !children.isEmpty()&&input.isEnableChildrenInput()){
+			for (Inputable child : children){
+				if(!(child instanceof Inputable)){
+					LogUtil.info("child is not instance of the Inputable , return");
+					return;
+				}	
 				if(child.isEnableInput())
 					child.inputs(evn);
+			} 
+		}
 		
-		DebugUtil.depthInfo(input.getInputDepth(), input.getClass());
+		DebugUtil.depthInfo(((HasChildrenable<?>)input).getDepth(), input.getClass());
 		
 		if(input.isEnableInput())
 			input.onInput(evn);
-	}
-	
-	public static void setInputableParent(Inputable child,Inputable parent){
-		if(null == child||null == parent){
-			LogUtil.debug("set parent param invalid!");
-			return;
-		}
-		Inputable pparent;
-		while(null!=(pparent = parent.getInputableParent())){
-			if(child == pparent){//避免成环
-				LogUtil.info("parent's parents has child , that is loop , invalid set parent , stop it");
-				return;
-			}
-		}
-		child.setInputableParent(parent);
-		if(parent.getInputDepth() < 1)
-			LogUtil.info("warning! parent's depth is less than 1 , there is error maybe!");
-		
-		child.setInputDepth(1+parent.getInputDepth());
 	}
 }

@@ -1,7 +1,6 @@
 package pengrui.javagl.abstraction;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
 import pengrui.javagl.abstraction.cores.Drawable;
 import pengrui.javagl.abstraction.factorys.DrawManagerFactory;
@@ -32,43 +31,22 @@ public abstract class DrawableObject implements Drawable{
 	public void setEnableDraw(boolean en) {
 		enableDraw = en;
 	}
-	@Override
-	public Collection<Drawable> getDrawableChildren() {
-		return children;
-	}
-	@Override
-	public Drawable getDrawableParent() {
-		return parent;
-	}
-	@Override
-	public void setDrawableParent(Drawable parent) {
-		this.parent = parent;
-	}
-	
-	@Override
-	public boolean isEnableDrawChildren() {
-		return enableChildrenDraw;
-	}
-	@Override
-	public void setEnableDrawChildren(boolean en) {
-		enableChildrenDraw = en;
-	}
-	@Override
-	public void addDrawableChild(Drawable child) {
-		if(null == child)
-			return;
-		
-		if(null == children)
-			children = new LinkedList<Drawable>();
-		
-		children.add(child);
-		child.setDrawableParent(this);
-	}
-	@Override
-	public void removeDrawableChild(Drawable child) {
-		if(null == child || null == children)
-			return;
-		
-		children.remove(child);
-	}
+//	@Override
+//	public void addChild(Drawable child) {
+//		if(null == child)
+//			return;
+//		
+//		if(null == children)
+//			children = new LinkedList<Drawable>();
+//		
+//		children.add(child);
+//		child.setParent(this);
+//	}
+//	@Override
+//	public void removeChild(Drawable child) {
+//		if(null == child || null == children)
+//			return;
+//		
+//		children.remove(child);
+//	}
 }

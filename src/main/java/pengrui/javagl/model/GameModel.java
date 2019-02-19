@@ -10,11 +10,13 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import pengrui.javagl.abstraction.NonInputGameObject;
 import pengrui.javagl.abstraction.animation.Animationable;
+import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.cores.Actionable;
 import pengrui.javagl.abstraction.cores.Drawable;
 import pengrui.javagl.abstraction.cores.Lifecyclable;
+import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
+import pengrui.javagl.abstraction.factorys.DrawManagerFactory;
 import pengrui.javagl.abstraction.models.VaoPair;
 import pengrui.javagl.abstraction.shaders.Shaderable;
 import pengrui.javagl.abstraction.util.LoaderUtil;
@@ -24,7 +26,7 @@ import pengrui.javagl.abstraction.util.ResourceUtil;
 import pengrui.javagl.shader.ShaderImpl;
 import pengrui.javagl.texture.ImageType;
 
-public class GameModel extends NonInputGameObject implements Lifecyclable{
+public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable,Lifecyclable{
 	
 	public GameModel(){
 		this((Vector3f)null);
@@ -45,7 +47,8 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 	} 
 	
 	public  <T extends Shaderable>GameModel(Vector3f pos,Vector3f rot,Vector3f scale,Shaderable shader) {
-		
+		DrawManagerFactory.getInstance().register(this);
+		ActionManagerFactory.getInstance().register(this);
 		position = pos;
 		rotation = rot;
 		this.scale = scale;
@@ -130,28 +133,7 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		this.shader.unuseShader();
 	}
-	@Override
-	public Actionable getActionableParent() {
-		return null;
-	}
-	@Override
-	public void setActionableParent(Actionable parent) {
-		
-	}
-	@Override
-	public boolean isEnableAction() {
-		return true;
-	}
-	@Override
-	public void setEnableAction(boolean en) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	@Override
-	public void actions(long delteTime) {
-		// TODO Auto-generated method stub
-	}
 	protected void animation1(){
 		float rotx = r.nextFloat()*2-1; //震动效果
 		float roty = r.nextFloat()*2-1;
@@ -161,7 +143,6 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 		rotation.z+=rotz;
 		
 	}
-	
 	
 	final Random r= new Random();
 	final boolean negative = r.nextBoolean();
@@ -192,45 +173,6 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 		animation2();
 	}
 	@Override
-	public void onAction(long delteTime) {
-		incrementRotate();
-	}
-	@Override
-	public boolean isEnableChildrenAction() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public void setEnableChildrenAction(boolean en) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Collection<Actionable> getActionableChildren() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void addActionableChild(Actionable child) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void removeActionableChild(Actionable child) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Drawable getDrawableParent() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void setDrawableParent(Drawable parent) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
 	public boolean isEnableDraw() {
 		return true;
 	}
@@ -253,20 +195,6 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 	public void setEnableDrawChildren(boolean en) {
 		// TODO Auto-generated method stub
 		
-	}
-	@Override
-	public Collection<Drawable> getDrawableChildren() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void addDrawableChild(Drawable child) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void removeDrawableChild(Drawable child) {
-		// TODO Auto-generated method stub
 	}
 	@Override
 	public void init() {
@@ -301,6 +229,96 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 	}
 
 	@Override
+	public void setDepth(int d) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
+
+	@Override
+	public void printInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Collection<GameModel> getChildren() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addChild(GameModel child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeChild(GameModel child) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public GameModel getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setParent(GameModel parent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean hasTheChild(GameModel child) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isEnableAction() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void setEnableAction(boolean en) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actions(long delteTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAction(long delteTime) {
+		incrementRotate();
+	}
+
+	@Override
+	public boolean isEnableChildrenAction() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setEnableChildrenAction(boolean en) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public boolean hasAnimatation() {
 		// TODO Auto-generated method stub
 		return false;
@@ -322,25 +340,5 @@ public class GameModel extends NonInputGameObject implements Lifecyclable{
 	public boolean isEnableAnimation() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public int getActionDepth() {
-		return 1;
-	}
-
-	@Override
-	public void setActionDepth(int d) {
-		
-	}
-
-	@Override
-	public int getDrawDepth() {
-		return 1;
-	}
-
-	@Override
-	public void setDrawDepth(int d) {
-		
 	}
 }

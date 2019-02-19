@@ -39,7 +39,7 @@ public interface DrawManagerFactory extends Factoryable<IDrawableManager>{
 		};
 
 	}
-	IDrawableManager INSTANCE = new Impl();
+	static final IDrawableManager INSTANCE = new Impl();
 	public static IDrawableManager getInstance(){
 		return INSTANCE;
 	}

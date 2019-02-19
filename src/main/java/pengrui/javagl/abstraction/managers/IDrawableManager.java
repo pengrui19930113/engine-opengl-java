@@ -1,16 +1,28 @@
 package pengrui.javagl.abstraction.managers;
 
+import java.util.Collection;
+
 import org.lwjgl.opengl.GL11;
 
+import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.cores.Drawable;
 import pengrui.javagl.abstraction.util.LogUtil;
 
 public interface IDrawableManager extends Manageable<Drawable>{
-
+	@Override
+	void register(Drawable bean);// by Manageable
+	@Override
+	void unregister(Drawable bean);// by Manageable
+	@Override
+	Collection<Drawable> getAll();// by Manageable
+	@Override
+	void init(); // by Lifecyclable
+	@Override
+	void destroy();// by Lifecyclable
 	void draws();
 	
 	public static void register(IDrawableManager dm,Drawable bean) {
-		if(1 == bean.getDrawDepth()){
+		if(1 == ((HasChildrenable<?>)bean).getDepth()){
 			Manageable.register(dm, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore register");
@@ -18,7 +30,7 @@ public interface IDrawableManager extends Manageable<Drawable>{
 	}
 	
 	public static void unregister(IDrawableManager dm,Drawable bean) {
-		if(1 == bean.getDrawDepth()){
+		if(1 == ((HasChildrenable<?>)bean).getDepth()){
 			Manageable.unregister(dm, bean);
 		}else{
 			LogUtil.debug("is not one level object, ignore remove");
@@ -36,7 +48,6 @@ public interface IDrawableManager extends Manageable<Drawable>{
 				);
 		
 		for (Drawable drawable : dm.getAll()) {
-			if(drawable.isEnableDraw())
 				drawable.onDraw();
 		}
 	}

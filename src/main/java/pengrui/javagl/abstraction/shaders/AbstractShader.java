@@ -9,10 +9,18 @@ import org.lwjgl.opengl.GL20;
 
 import pengrui.javagl.abstraction.util.ExceptionUtil;
 import pengrui.javagl.abstraction.util.GlslUtil;
+import pengrui.javagl.abstraction.util.LoaderUtil;
 import pengrui.javagl.abstraction.util.GlobalConfig;
 import pengrui.javagl.abstraction.util.LogUtil;
 import pengrui.javagl.abstraction.util.ReflectionUtil;
 
+/**
+ * 
+ * @author Administrator
+ * 
+ * 索引和名称的绑定是根据下面这个函数决定的
+ *{@link LoaderUtil#loadVAO(float[], float[], float[], int[])}.
+ */
 @VertexAttributeBinding(
 					layoutIndex = 	{
 							0

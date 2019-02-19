@@ -1,12 +1,10 @@
 package pengrui.javagl.entitys;
 
-import java.util.Collection;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import pengrui.javagl.abstraction.ActionableObject;
-import pengrui.javagl.abstraction.animation.Animationable;
 import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
 
 public class Camera extends ActionableObject{
@@ -64,28 +62,7 @@ public class Camera extends ActionableObject{
 	public float getRoll() {
 		return roll;
 	}
-	@Override
-	public void onAction(long delteTime) {
-		move();
-	}
 
-	@Override
-	public boolean hasAnimatation() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Collection<Animationable> getAnimations() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setAnimation(Animationable animation) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean isEnableAnimation() {
@@ -93,16 +70,4 @@ public class Camera extends ActionableObject{
 		return false;
 	}
 
-
-	@Override
-	public int getActionDepth() {
-		// TODO Auto-generated method stub
-		return 1;
-	}
-
-	@Override
-	public void setActionDepth(int d) {
-		// TODO Auto-generated method stub
-		
-	}
 }

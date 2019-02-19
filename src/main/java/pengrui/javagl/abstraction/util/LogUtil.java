@@ -11,6 +11,9 @@ import java.util.Properties;
 
 public class LogUtil {
 	
+	public static final int LOG_LEVEL_DEBUG = 2
+			,LOG_LEVEL_INFO = 1
+			,LOG_LEVEL_ERROR = 0;
 	static class LogAdapter{
 		PrintWriter out;
 		PrintWriter err;

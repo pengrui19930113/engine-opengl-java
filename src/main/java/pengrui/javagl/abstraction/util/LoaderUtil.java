@@ -21,6 +21,9 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import pengrui.javagl.abstraction.models.VaoPair;
+import pengrui.javagl.abstraction.shaders.AbstractShader;
+import pengrui.javagl.abstraction.shaders.VertexAttributeBinding;
+import pengrui.javagl.shader.ShaderImpl;
 import pengrui.javagl.texture.ImageType;
 
 public class LoaderUtil {
@@ -44,13 +47,26 @@ public class LoaderUtil {
 	}
 	
 
-	
+	/**
+	 * 
+	 * @param positions
+	 * @param textureCoords
+	 * @param normals
+	 * @param indices
+	 * @return
+	 * 顶点的绑定与下面2个类相关
+	 * {@link VertexAttributeBinding}
+	 * {@link AbstractShader}
+	 * 
+	 * 具体的实现可以查看
+	 * {@link ShaderImpl}
+	 */
 	public static VaoPair loadVAO(float[] positions,float[] textureCoords ,float[]normals,int[] indices) {
 		int vaoid = GL30.glGenVertexArrays();
 		vaos.add(vaoid);//must be clear up
 		GL30.glBindVertexArray(vaoid);
 		bindIndicesBuffer(indices);
-		storeDataInAttributeList(0,3,positions); //该处巨顶了着色器的 VertexAttributeBinding 如何配置
+		storeDataInAttributeList(0,3,positions); //该处决定了着色器的 VertexAttributeBinding 如何配置
 		storeDataInAttributeList(1,2,textureCoords);
 		storeDataInAttributeList(2,3,normals);
 		GL30.glBindVertexArray(0);// unbind vao

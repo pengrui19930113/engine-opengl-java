@@ -1,7 +1,6 @@
 package pengrui.javagl.abstraction;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
 import pengrui.javagl.abstraction.cores.Inputable;
 import pengrui.javagl.abstraction.events.IEvent;
@@ -28,14 +27,6 @@ public abstract class InputableObject implements Inputable{
 		Inputable.inputs(this, evn);
 	}
 	@Override
-	public Inputable getInputableParent() {
-		return parent;
-	}
-	@Override
-	public void setInputableParent(Inputable parent) {
-		this.parent = parent;
-	}
-	@Override
 	public boolean isEnableChildrenInput() {
 		return enableChildrenInput;
 	}
@@ -43,26 +34,23 @@ public abstract class InputableObject implements Inputable{
 	public void setEnableChildrenInput(boolean en) {
 		enableChildrenInput = en;
 	}
-	@Override
-	public Collection<Inputable> getInputableChildren() {
-		return children;
-	}
-	@Override
-	public void addInpuablChild(Inputable input) {
-		if(null == input)
-			return;
-		
-		if(null == children)
-			children = new LinkedList<>();
-		
-		children.add(input);
-		input.setInputableParent(this);
-	}
-	@Override
-	public void removeInputableChild(Inputable input) {
-		if(null==children||null == input)
-			return ;
-		
-		children.remove(input);
-	}
+	
+//	@Override
+//	public void addChild(Inputable input) {
+//		if(null == input)
+//			return;
+//		
+//		if(null == children)
+//			children = new LinkedList<>();
+//		
+//		children.add(input);
+//		input.setParent(this);
+//	}
+//	@Override
+//	public void removeChild(Inputable input) {
+//		if(null==children||null == input)
+//			return ;
+//		
+//		children.remove(input);
+//	}
 }

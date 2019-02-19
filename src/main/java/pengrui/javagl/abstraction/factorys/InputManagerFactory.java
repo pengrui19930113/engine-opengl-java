@@ -39,7 +39,7 @@ public interface InputManagerFactory extends Factoryable<IInputableManager>{
 
 	}
 	
-	 IInputableManager INSTANCE = new Impl();
+	static final IInputableManager INSTANCE = new Impl();
 	 
 	public static IInputableManager getInstance(){
 		return INSTANCE;

@@ -8,11 +8,19 @@ import pengrui.javagl.abstraction.shaders.AbstractShader;
 import pengrui.javagl.abstraction.shaders.Shaderable;
 import pengrui.javagl.abstraction.shaders.UniformLocationBinding;
 import pengrui.javagl.abstraction.shaders.VertexAttributeBinding;
+import pengrui.javagl.abstraction.util.LoaderUtil;
 import pengrui.javagl.abstraction.util.LogUtil;
 import pengrui.javagl.abstraction.util.MatrixUtil;
 import pengrui.javagl.entitys.Camera;
 import pengrui.javagl.entitys.Light;
 
+/**
+ * 
+ * @author Administrator
+ * 
+ * 索引和名称的绑定是根据下面这个函数决定的
+ *{@link LoaderUtil#loadVAO(float[], float[], float[], int[])}.
+ */
 @VertexAttributeBinding(
 		layoutIndex = 	{
 				0

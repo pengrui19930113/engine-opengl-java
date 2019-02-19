@@ -2,6 +2,7 @@ package pengrui.javagl.abstraction.cores;
 
 import java.util.Collection;
 
+import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.shaders.Shaderable;
 import pengrui.javagl.abstraction.util.DebugUtil;
 import pengrui.javagl.abstraction.util.LogUtil;
@@ -11,21 +12,15 @@ import pengrui.javagl.abstraction.util.LogUtil;
  * @author Administrator
  *
  */
-public interface Drawable {
+@SuppressWarnings("unchecked")
+public interface Drawable{
 	
-	Drawable getDrawableParent();
-	void setDrawableParent(Drawable parent);
 	boolean isEnableDraw();
 	void setEnableDraw(boolean en);
 	void draws();
 	void onDraw();
 	boolean isEnableDrawChildren();
 	void setEnableDrawChildren(boolean en);
-	Collection<Drawable> getDrawableChildren();
-	void addDrawableChild(Drawable child);
-	void removeDrawableChild(Drawable child);
-	int getDrawDepth();
-	void setDrawDepth(int d);
 	
 	Shaderable getShader();
 	void setShader(Shaderable shader);
@@ -38,35 +33,25 @@ public interface Drawable {
 			return ;
 		}
 		
-		Collection<Drawable> children = draw.getDrawableChildren();
-		if(null!=children && !children.isEmpty()&&draw.isEnableDrawChildren())
-			for (Drawable child : children) 
+		if(!(draw instanceof HasChildrenable)){
+			LogUtil.info("draw not instance of the HasChildrenable ,return");
+			return;
+		}
+		Collection<Drawable> children = (Collection<Drawable>) ((HasChildrenable<?>)draw).getChildren();
+		if(null!=children && !children.isEmpty()&&draw.isEnableDrawChildren()){
+			for (Drawable child : children){
+				if(!(child instanceof Drawable)){
+					LogUtil.info("child is not instance of the Drawable , return");
+					return;
+				}				
 				if(child.isEnableDraw())
 					child.draws();
+			} 
+		}
 		
-		DebugUtil.depthInfo(draw.getDrawDepth(), draw.getClass());
+		DebugUtil.depthInfo(((HasChildrenable<?>)draw).getDepth(), draw.getClass());
 		
 		if(draw.isEnableDraw())
 			draw.onDraw();
 	}
-	
-	public static void setDrawableParent(Drawable child,Drawable parent){
-		if(null == child||null == parent){
-			LogUtil.debug("set parent param invalid!");
-			return;
-		}
-		Drawable pparent;
-		while(null!=(pparent = parent.getDrawableParent())){
-			if(child == pparent){//避免成环
-				LogUtil.info("parent's parents has child , that is loop , invalid set parent , stop it");
-				return;
-			}
-		}
-		child.setDrawableParent(parent);
-		if(parent.getDrawDepth() < 1)
-			LogUtil.info("warning! parent's depth is less than 1 , there is error maybe!");
-		
-		child.setDrawDepth(1+parent.getDrawDepth());
-	}
-	
 }

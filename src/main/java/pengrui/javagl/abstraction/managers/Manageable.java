@@ -3,7 +3,7 @@ package pengrui.javagl.abstraction.managers;
 import java.util.Collection;
 
 import pengrui.javagl.abstraction.cores.Lifecyclable;
-import pengrui.javagl.abstraction.util.LogUtil;
+import pengrui.javagl.abstraction.util.CheckUtil;
 
 public interface Manageable<T> extends Lifecyclable {
 	
@@ -20,24 +20,15 @@ public interface Manageable<T> extends Lifecyclable {
 
 	}
 
-	static boolean checkBeanNotNull(Object bean){
-		if(null == bean){
-			LogUtil.debug("bean is null");
-			return false;
-		}else{
-			return true;
-		}
-	}
-
 	public static <T> void unregister(Manageable<T> manager, T bean) {
 		checkManager(manager);
-		if (checkBeanNotNull(bean)) 
+		if (CheckUtil.paramNotNull(bean)) 
 			manager.getAll().remove(bean);
 	}
 
 	public static <T> void register(Manageable<T> manager, T bean) {
 		checkManager(manager);
-		if (checkBeanNotNull(bean)) 
+		if (CheckUtil.paramNotNull(bean)) 
 			manager.getAll().add(bean);
 	}
 	

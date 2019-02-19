@@ -3,16 +3,18 @@ package pengrui.javagl.abstraction;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import pengrui.javagl.abstraction.animation.Animationable;
+import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.cores.Actionable;
 import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
 
-public abstract class ActionableObject implements Actionable{
+public class ActionableObject implements Actionable,HasChildrenable<ActionableObject>{
 	
-	Actionable parent;
+	ActionableObject parent;
 	boolean enableAction = true;
 	boolean enableChildrenAction = true;
 	
-	Collection<Actionable> children;
+	Collection<ActionableObject> children;
 	
 	public ActionableObject() {
 		ActionManagerFactory.getInstance().register(this);
@@ -30,27 +32,28 @@ public abstract class ActionableObject implements Actionable{
 		enableAction = en;
 	}
 	@Override
-	public void addActionableChild(Actionable child) {
+	public void addChild(ActionableObject child) {
 		if(null == children)
 			children = new LinkedList<>();
 		
 		children.add(child);
-		child.setActionableParent(this);
+		child.setParent(this);
 	}
 	@Override
-	public Actionable getActionableParent() {
+	public ActionableObject getParent() {
 		return parent;
 	}
 	@Override
-	public void setActionableParent(Actionable parent) {
+	public void setParent(ActionableObject parent) {
 		this.parent = parent;
 	}
 	@Override
-	public Collection<Actionable> getActionableChildren() {
+	public Collection<ActionableObject> getChildren() {
 		return children;
 	}
 	@Override
-	public void removeActionableChild(Actionable child) {
+	public void removeChild(ActionableObject child) {
+	
 		if(null == child || null == children)
 			return;
 		
@@ -63,5 +66,50 @@ public abstract class ActionableObject implements Actionable{
 	@Override
 	public void setEnableChildrenAction(boolean en) {
 		enableChildrenAction = en;
+	}
+	@Override
+	public void setDepth(int d) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+	@Override
+	public boolean hasTheChild(ActionableObject child) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public void printInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onAction(long delteTime) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean hasAnimatation() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public Collection<Animationable> getAnimations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void setAnimation(Animationable animation) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean isEnableAnimation() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

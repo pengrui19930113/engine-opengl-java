@@ -34,7 +34,7 @@ public interface ActionManagerFactory extends Factoryable<IActionableManager>{
 		}
 	}
 	
-	IActionableManager INSTANCE = new Impl();
+	static final IActionableManager INSTANCE = new Impl();
 	
 	public static IActionableManager getInstance(){
 		return INSTANCE;
