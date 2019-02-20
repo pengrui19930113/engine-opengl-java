@@ -1,9 +1,11 @@
 package pengrui.javagl.abstraction.cores;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import pengrui.javagl.abstraction.animation.Animationable;
 import pengrui.javagl.abstraction.basics.HasChildrenable;
+import pengrui.javagl.abstraction.util.CheckUtil;
 import pengrui.javagl.abstraction.util.DebugUtil;
 import pengrui.javagl.abstraction.util.GlobalConfig;
 import pengrui.javagl.abstraction.util.LogUtil;
@@ -27,7 +29,13 @@ public interface Actionable {
 	boolean isEnableAnimation();
 	void setEnableAnimation(boolean en);
 	Collection<Animationable> getAnimations();
-	void addAnimation(Animationable animation);
+	void setAnimations(Collection<Animationable> animations);
+	default void removeAnimation(Animationable animation){
+		removeAnimation(this, animation, false);
+	}
+	default void addAnimation(Animationable animation){
+		addAnimation(this,animation);
+	}
 	
 	public static void actions(Actionable action,long delteTime){
 		
@@ -62,6 +70,40 @@ public interface Actionable {
 					ani.onAnimation();
 				
 			action.onAction(delteTime);
+		}
+	}
+	
+	public static void addAnimation(Actionable action,Animationable animation){
+		if(!CheckUtil.paramsAllNotNull(action,animation))
+			return;
+		
+		if(null == action.getAnimations())
+			action.setAnimations(new LinkedList<Animationable>());;
+		
+		action.getAnimations().add(animation);
+	}
+	
+	/**
+	 * 
+	 * @param action
+	 * @param animation
+	 * @param removeSameAnimation animation可以添加多个一样的 该标志位确定是否移除一样的animation 
+	 */
+	public static void removeAnimation(Actionable action,Animationable animation,boolean removeSameAnimation){
+		if(!CheckUtil.paramsAllNotNull(action,animation))
+			return;
+		
+		if(null == action.getAnimations()){
+			LogUtil.debug("action.getAnimations is null, ingore");
+			return;
+		}
+		
+		if(removeSameAnimation){
+			while(action.getAnimations().contains(animation)){
+				action.getAnimations().remove(animation);
+			}
+		}else{
+			action.getAnimations().remove(animation);
 		}
 	}
 	

@@ -14,5 +14,5 @@ public class SpaceData {
 	}
 	
 	public static final SpaceData cache = 
-			new SpaceData(new Vector3f(0,0,20), new Vector3f(0,0,0), new Vector3f(1,1,1));
+			new SpaceData(new Vector3f(0,0,-20), new Vector3f(0,0,0), new Vector3f(1,1,1));
 }

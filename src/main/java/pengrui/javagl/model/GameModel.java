@@ -31,8 +31,6 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 	}
 	
 	public  <T extends Shaderable>GameModel(SpaceData sd,ModelData md) {
-		DrawManagerFactory.getInstance().register(this);
-		ActionManagerFactory.getInstance().register(this);
 		vaoID = md.vaoID;
 		vertexCount = md.vertexCount;
 		textureID = md.textureID;
@@ -43,6 +41,8 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 		shineDamper = 10;
 		reflectivity = 1;
 		innerInit();//未完成初始化的变量进行初始化
+		DrawManagerFactory.getInstance().register(this);
+		ActionManagerFactory.getInstance().register(this);
 	}
 	void innerInit(){
 		if(null == position)
@@ -125,7 +125,7 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 	final Random r= new Random();
 	final boolean negative = r.nextBoolean();
 	final boolean x = r.nextBoolean(),y=r.nextBoolean(),z=r.nextBoolean();
-	private void animation2(){
+	protected void animation2(){
 		float tmp = r.nextFloat()*2;
 		float rotx = negative?-tmp:tmp;
 		float roty = rotx;
@@ -308,6 +308,18 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 
 	@Override
 	public void setChildren(Collection<GameModel> c) {
+	}
+
+	@Override
+	public void setAnimations(Collection<Animationable> animations) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeAnimation(Animationable animation) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

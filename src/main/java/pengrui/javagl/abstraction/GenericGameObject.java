@@ -1,8 +1,7 @@
 package pengrui.javagl.abstraction;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 import pengrui.javagl.abstraction.animation.Animationable;
 import pengrui.javagl.abstraction.basics.HasChildrenable;
@@ -23,13 +22,22 @@ public abstract class GenericGameObject
 						,Inputable
 {
 	public GenericGameObject() {
-		//TODO enableInput = true;//...
-		depth = 1;
 		
-		DrawManagerFactory.getInstance().register(this);
+		depth = 1;
+		enableInput = true;
+		enableChildrenInput = true;
+		enableAction = true;
+		enableChildrenAction = true;
+		enableDraw = true;
+		enableDrawChildren = true;
+		enableAnimation = true;
+		parent = null;
+		
+		DrawManagerFactory.getInstance().register(this);//后续由上下文来获取管理器注册
 		ActionManagerFactory.getInstance().register(this);
 		InputManagerFactory.getInstance().register(this);
 	}
+	
 	boolean enableInput;
 	boolean enableChildrenInput;
 	boolean enableAction;
@@ -44,9 +52,10 @@ public abstract class GenericGameObject
 	GenericGameObject parent;
 	int depth;
 	Shaderable shader;
-	int vaoID;
+	int vaoID;//TODO
 	int vertexCount;
-	List<Integer> textureIDs;
+	Map<String,Integer> textureIDs;//多重 纹理 的纹理ID
+//	List<Integer> textureIDs;
 	
 	@Override
 	public boolean isEnableInput() {
@@ -104,14 +113,6 @@ public abstract class GenericGameObject
 	}
 
 	@Override
-	public void addAnimation(Animationable animation) {
-		if(null == animations)
-			animations = new LinkedList<Animationable>();
-		
-		animations.add(animation);
-	}
-
-	@Override
 	public boolean isEnableAnimation() {
 		return enableAnimation;
 	}
@@ -165,21 +166,6 @@ public abstract class GenericGameObject
 	}
 	
 	@Override
-	public final void addChild(GenericGameObject child) {
-		HasChildrenable.addChild(this, child);
-	}
-
-	@Override
-	public void removeChild(GenericGameObject child) {
-		HasChildrenable.removeChild(this, child);
-	}
-
-	@Override
-	public boolean hasTheChild(GenericGameObject child) {
-		return HasChildrenable.hasTheChild(this, child,false);
-	}
-
-	@Override
 	public GenericGameObject getParent() {
 		return parent;
 	}
@@ -200,13 +186,12 @@ public abstract class GenericGameObject
 	}
 
 	@Override
-	public void printInfo() {
-		HasChildrenable.printInfo(this);
-	}
-
-	@Override
 	public String toString() {
 		return super.toString();//TODO
 	}
 
+	@Override
+	public void setAnimations(Collection<Animationable> animations) {
+		this.animations = animations;
+	}
 }

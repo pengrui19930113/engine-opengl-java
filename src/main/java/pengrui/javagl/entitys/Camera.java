@@ -8,7 +8,7 @@ import pengrui.javagl.abstraction.OnlyInputGameObject;
 import pengrui.javagl.abstraction.events.IEvent;
 
 public class Camera extends OnlyInputGameObject{
-	Vector3f position = new Vector3f(0,0,3f);
+	Vector3f position = new Vector3f(0,0,-10f);
 	float pitch; // 倾斜 // 仰角 //相机坐标系中的 X
 	float yaw;	// 偏航角 //相机坐标系中的Y
 	float roll; // 翻滚 //相机坐标系中的Z

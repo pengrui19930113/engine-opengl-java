@@ -14,52 +14,48 @@ import pengrui.javagl.abstraction.util.LogUtil;
 public interface HasChildrenable<T extends HasChildrenable<T>> {
 
 	Collection<T> getChildren();
+	
 	void setChildren(Collection<T> c);
 	/**
 	 * 在当前子元素的容器中添加 child
 	 * @param child
 	 */
-	void addChild(T child);
+	default void addChild(T child){
+		HasChildrenable.addChild((T)this, child);
+	}
+	
 	/**
 	 * 如果当前元素的子孙备中包含了child 则移除
 	 * @param child
 	 */
-	void removeChild(T child);
+	default void removeChild(T child){
+		HasChildrenable.removeChild((T)this, child);
+	}
+	
 	/**
 	 * 当前元素的子元素是否包含 child(不会查找孙辈元素)
 	 * @param child
 	 * @return
 	 */
-	boolean hasTheChild(T child);
+	default boolean hasTheChild(T child){
+		return HasChildrenable.hasTheChild((T)this, child, false);
+	}
+	
 	T getParent();
-	void setParent(T parent);
+	
+	default void setParent(T parent){
+		HasChildrenable.setParent((T)this, parent);
+	}
+	
 	void setDepth(int d);
+	
 	int getDepth();// 通常 深度 >= 1
-	void printInfo(); // 为了调试方便
+	
+	default void printInfo(){// 为了调试方便
+		HasChildrenable.printInfo(this);
+	} 
 
-	static void printParamIsNullMessage() {
-		LogUtil.debug("class is null , ignore");
-	}
-
-	static String getClassInfo(Class<?> clazz) {
-		if (CheckUtil.paramNotNull(clazz))
-			return String.format("classInfo:%s ", clazz);
-		else {
-			printParamIsNullMessage();
-			return "";
-		}
-	}
-
-	static String getClassInfo(Class<?> parentClass, Class<?> childClass) {
-		if (CheckUtil.paramsAllNotNull(parentClass, childClass))
-			return String.format("classInfo: parent:%s,child%s ", parentClass, childClass);
-		else {
-			printParamIsNullMessage();
-			return "";
-		}
-	}
-
-	public static boolean isOneLevelBean(Object bean){
+		public static boolean isOneLevelBean(Object bean){
 		if(CheckUtil.paramNotNull(bean)){
 			if(!(bean instanceof HasChildrenable))
 				ExceptionUtil.throwRuntimeException("the bean must be implements HasChildrenable");
@@ -292,4 +288,28 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 					,g.getClass()
 					,g.toString()));
 	}
+	
+	static void printParamIsNullMessage() {
+		LogUtil.debug("class is null , ignore");
+	}
+
+	static String getClassInfo(Class<?> clazz) {
+		if (CheckUtil.paramNotNull(clazz))
+			return String.format("classInfo:%s ", clazz);
+		else {
+			printParamIsNullMessage();
+			return "";
+		}
+	}
+
+	static String getClassInfo(Class<?> parentClass, Class<?> childClass) {
+		if (CheckUtil.paramsAllNotNull(parentClass, childClass))
+			return String.format("classInfo: parent:%s,child%s ", parentClass, childClass);
+		else {
+			printParamIsNullMessage();
+			return "";
+		}
+	}
+
+
 }

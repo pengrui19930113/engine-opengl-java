@@ -61,10 +61,11 @@ public class ShaderImpl extends AbstractShader{
 		float shineDamper = (float) varaibles[1];
 		float reflectivity = (float) varaibles[2];
 		Shaderable.loadMatrix4f(locationTransformationMatrix, tfm);		
-		Shaderable.loadMatrix4f(locationViewMatrix, MatrixUtil.createViewMatrix(Camera.getInstance()));
+		Camera camera = Camera.getInstance();//TODO 后续相机有相机管理器来获取
+		Shaderable.loadMatrix4f(locationViewMatrix, MatrixUtil.createViewMatrix(camera));
 		Shaderable.loadFloat(locationShineDamper, shineDamper);
 		Shaderable.loadFloat(locationReflectivity, reflectivity);
-		Light light = Light.getInstance();// 后续光源 由光源管理器来获取
+		Light light = Light.getInstance();// TODO 后续光源 由光源管理器来获取
 		Shaderable.loadVector3f(locationLightPosition, light.getPosition());
 		Shaderable.loadVector3f(locationLightColour, light.getColour());
 	}

@@ -2,7 +2,6 @@ package pengrui.javagl;
 
 
 import java.io.IOException;
-import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -10,8 +9,6 @@ import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
 import pengrui.javagl.abstraction.factorys.DrawManagerFactory;
 import pengrui.javagl.abstraction.factorys.InputManagerFactory;
 import pengrui.javagl.abstraction.factorys.LifecycleManagerFactory;
-import pengrui.javagl.abstraction.models.ModelData;
-import pengrui.javagl.abstraction.models.SpaceData;
 import pengrui.javagl.abstraction.util.FPSUtil;
 import pengrui.javagl.abstraction.util.LoaderUtil;
 import pengrui.javagl.abstraction.util.LogUtil;
@@ -36,18 +33,18 @@ public class GameMainLoop {
 		Light.manualInit(new Vector3f(10.0f,0.f,10.f), new Vector3f(1.0f,1.0f,1.0f));
 		Camera.getInstance();
 		
-		Random r = new Random();
-		int xw = 200;
-		int yw = 20;
-		int zh = 200;
-		for(int i=0;i<100;++i){
-			float x = r.nextFloat()*xw - xw/2;
-			float y = r.nextFloat()*yw - yw/2;
-			float z = r.nextFloat()*zh - zh/2;
-			SpaceData sp = new SpaceData(new Vector3f(x,y,z), null, null);
-			new GameModel(sp,ModelData.cache);
-		}
-		
+//		Random r = new Random();
+//		int xw = 200;
+//		int yw = 20;
+//		int zh = 200;
+//		for(int i=0;i<100;++i){
+//			float x = r.nextFloat()*xw - xw/2;
+//			float y = r.nextFloat()*yw - yw/2;
+//			float z = r.nextFloat()*zh - zh/2;
+//			SpaceData sp = new SpaceData(new Vector3f(x,y,z), null, null);
+//			new GameModel(sp,ModelData.cache);
+//		}
+		new GameModel();
 		
 		LifecycleManagerFactory.getInstance().init();
 		
