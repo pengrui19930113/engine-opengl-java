@@ -1,6 +1,8 @@
 package pengrui.javagl.abstraction;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import pengrui.javagl.abstraction.animation.Animationable;
 import pengrui.javagl.abstraction.basics.HasChildrenable;
@@ -13,7 +15,7 @@ import pengrui.javagl.abstraction.factorys.DrawManagerFactory;
 import pengrui.javagl.abstraction.factorys.InputManagerFactory;
 import pengrui.javagl.abstraction.shaders.Shaderable;
 
-public class GenericGameObject 
+public abstract class GenericGameObject 
 					implements  
 						HasChildrenable<GenericGameObject>
 						,Drawable
@@ -21,11 +23,12 @@ public class GenericGameObject
 						,Inputable
 {
 	public GenericGameObject() {
+		//TODO enableInput = true;//...
+		depth = 1;
+		
 		DrawManagerFactory.getInstance().register(this);
 		ActionManagerFactory.getInstance().register(this);
 		InputManagerFactory.getInstance().register(this);
-		
-		//TODO enableInput = true;//...
 	}
 	boolean enableInput;
 	boolean enableChildrenInput;
@@ -37,6 +40,14 @@ public class GenericGameObject
 	
 	Collection<Animationable> animations;
 	Collection<GenericGameObject> children;
+	
+	GenericGameObject parent;
+	int depth;
+	Shaderable shader;
+	int vaoID;
+	int vertexCount;
+	List<Integer> textureIDs;
+	
 	@Override
 	public boolean isEnableInput() {
 		return enableInput;
@@ -48,13 +59,8 @@ public class GenericGameObject
 	}
 
 	@Override
-	public void inputs(IEvent evn) {
+	public final void inputs(IEvent evn) {
 		Inputable.inputs(this, evn);
-	}
-
-	@Override
-	public void onInput(IEvent evn) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -78,13 +84,8 @@ public class GenericGameObject
 	}
 
 	@Override
-	public void actions(long delteTime) {
+	public final void actions(long delteTime) {
 		Actionable.actions(this, delteTime);
-	}
-
-	@Override
-	public void onAction(long delteTime) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -104,8 +105,10 @@ public class GenericGameObject
 
 	@Override
 	public void addAnimation(Animationable animation) {
-		// TODO Auto-generated method stub
+		if(null == animations)
+			animations = new LinkedList<Animationable>();
 		
+		animations.add(animation);
 	}
 
 	@Override
@@ -127,14 +130,8 @@ public class GenericGameObject
 	}
 
 	@Override
-	public void draws() {
+	public final void draws() {
 		Drawable.draws(this);
-	}
-
-	@Override
-	public void onDraw() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -149,14 +146,12 @@ public class GenericGameObject
 
 	@Override
 	public Shaderable getShader() {
-		// TODO Auto-generated method stub
-		return null;
+		return shader;
 	}
 
 	@Override
 	public void setShader(Shaderable shader) {
-		// TODO Auto-generated method stub
-		
+		this.shader = shader;
 	}
 
 	@Override
@@ -165,7 +160,12 @@ public class GenericGameObject
 	}
 
 	@Override
-	public void addChild(GenericGameObject child) {
+	public void setChildren(Collection<GenericGameObject> c) {
+		children = c;
+	}
+	
+	@Override
+	public final void addChild(GenericGameObject child) {
 		HasChildrenable.addChild(this, child);
 	}
 
@@ -176,38 +176,37 @@ public class GenericGameObject
 
 	@Override
 	public boolean hasTheChild(GenericGameObject child) {
-		// TODO Auto-generated method stub
-		return false;
+		return HasChildrenable.hasTheChild(this, child,false);
 	}
 
 	@Override
 	public GenericGameObject getParent() {
-		// TODO Auto-generated method stub
-		return null;
+		return parent;
 	}
 
 	@Override
 	public void setParent(GenericGameObject parent) {
-		// TODO Auto-generated method stub
-		
+		this.parent = parent;
 	}
 
 	@Override
 	public void setDepth(int d) {
-		// TODO Auto-generated method stub
-		
+		depth = d;
 	}
 
 	@Override
 	public int getDepth() {
-		// TODO Auto-generated method stub
-		return 0;
+		return depth;
 	}
 
 	@Override
 	public void printInfo() {
-		// TODO Auto-generated method stub
-		
+		HasChildrenable.printInfo(this);
+	}
+
+	@Override
+	public String toString() {
+		return super.toString();//TODO
 	}
 
 }

@@ -7,6 +7,7 @@ import pengrui.javagl.abstraction.events.AbstractEvent;
 import pengrui.javagl.abstraction.events.IEvent;
 import pengrui.javagl.abstraction.events.IEventManager;
 import pengrui.javagl.abstraction.util.DebugUtil;
+import pengrui.javagl.abstraction.util.GlobalConfig;
 import pengrui.javagl.abstraction.util.LogUtil;
 
 /**
@@ -35,17 +36,19 @@ public interface Inputable{
 	}
 	
 	public static void inputs(Inputable input,IEvent evn){
-		if(
-				null == input 
-				|| null == evn //事件处理源 或 事件为空 则不处理
-				|| null==evn.getEventType()// 事件类型为空 则不处理
-				|| null == evn.getDestination() //事件的目标对象为空 则不处理
-				|| null == evn.getSource() // 事件的事件源为空 则不处理
-				|| evn.getDestination() == evn  //事件的目标对象是源对象 则不处理 避免递归
-				|| evn.getSource()!=input // 事件的事件源不是事件发生者自身 则不处理
-				) {
-			LogUtil.debug("input param invalid");
-			return ;
+		if(!GlobalConfig.INPUT_TEST_ENABLE){
+			if(
+					null == input 
+					|| null == evn //事件处理源 或 事件为空 则不处理
+					|| null==evn.getEventType()// 事件类型为空 则不处理
+					|| null == evn.getDestination() //事件的目标对象为空 则不处理
+					|| null == evn.getSource() // 事件的事件源为空 则不处理
+					|| evn.getDestination() == evn  //事件的目标对象是源对象 则不处理 避免递归
+					|| evn.getSource()!=input // 事件的事件源不是事件发生者自身 则不处理
+					) {
+				LogUtil.debug("input param invalid");
+				return ;
+			}
 		}
 		if(!(input instanceof HasChildrenable)){
 			LogUtil.info("draw not instance of the HasChildrenable ,return");
@@ -64,7 +67,8 @@ public interface Inputable{
 			} 
 		}
 		
-		DebugUtil.depthInfo(((HasChildrenable<?>)input).getDepth(), input.getClass());
+		if(GlobalConfig.DEPTH_INFO_ENABLE)
+			DebugUtil.depthInfo(((HasChildrenable<?>)input).getDepth(), input.getClass());
 		
 		if(input.isEnableInput())
 			input.onInput(evn);

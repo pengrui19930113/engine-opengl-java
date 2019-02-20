@@ -6,6 +6,8 @@ import java.util.Set;
 
 import pengrui.javagl.abstraction.basics.Factoryable;
 import pengrui.javagl.abstraction.cores.Inputable;
+import pengrui.javagl.abstraction.events.AbstractEvent;
+import pengrui.javagl.abstraction.events.IEvent;
 import pengrui.javagl.abstraction.managers.AbstractInputManager;
 import pengrui.javagl.abstraction.managers.IInputableManager;
 
@@ -35,6 +37,11 @@ public interface InputManagerFactory extends Factoryable<IInputableManager>{
 		public void inputs() {
 			// TODO Auto-generated method stub
 			//捕获事件 然后分发事件
+			IEvent evn =new AbstractEvent();
+			evn.setSource(new Object());
+			for(Inputable i:getAll()){
+				i.inputs(evn);
+			}
 		}
 
 	}

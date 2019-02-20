@@ -1,4 +1,4 @@
-this is a java graphic engin(no audio code now)
+this is a java graphic engine(no audio code now)
 
 run print exception about -Djava.library.path  please add the native library support . same that
 toolbar->Run->Run Configurations...->java Application->Arguements->VM arguements 

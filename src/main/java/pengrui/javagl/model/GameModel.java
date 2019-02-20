@@ -306,4 +306,8 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 		
 	}
 
+	@Override
+	public void setChildren(Collection<GameModel> c) {
+	}
+
 }

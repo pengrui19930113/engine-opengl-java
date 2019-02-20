@@ -4,10 +4,10 @@ package pengrui.javagl.entitys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
-import pengrui.javagl.abstraction.ActionableObject;
-import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
+import pengrui.javagl.abstraction.OnlyInputGameObject;
+import pengrui.javagl.abstraction.events.IEvent;
 
-public class Camera extends ActionableObject{
+public class Camera extends OnlyInputGameObject{
 	Vector3f position = new Vector3f(0,0,3f);
 	float pitch; // 倾斜 // 仰角 //相机坐标系中的 X
 	float yaw;	// 偏航角 //相机坐标系中的Y
@@ -19,7 +19,6 @@ public class Camera extends ActionableObject{
 	}
 	
 	public Camera() {
-		ActionManagerFactory.getInstance().register(this);
 	}
 
 	static float MOVE_SPEED = 0.2f; 
@@ -63,11 +62,10 @@ public class Camera extends ActionableObject{
 		return roll;
 	}
 
-
 	@Override
-	public boolean isEnableAnimation() {
-		// TODO Auto-generated method stub
-		return false;
+	public void onInput(IEvent evn) {
+		move();
 	}
+
 
 }

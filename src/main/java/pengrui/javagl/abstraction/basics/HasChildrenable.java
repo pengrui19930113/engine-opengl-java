@@ -7,12 +7,14 @@ import java.util.List;
 import pengrui.javagl.abstraction.util.CheckUtil;
 import pengrui.javagl.abstraction.util.DebugUtil;
 import pengrui.javagl.abstraction.util.ExceptionUtil;
+import pengrui.javagl.abstraction.util.GlobalConfig;
 import pengrui.javagl.abstraction.util.LogUtil;
 
 @SuppressWarnings("all")
 public interface HasChildrenable<T extends HasChildrenable<T>> {
 
 	Collection<T> getChildren();
+	void setChildren(Collection<T> c);
 	/**
 	 * 在当前子元素的容器中添加 child
 	 * @param child
@@ -90,8 +92,6 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 				,boolean depthProcessChildren
 				,boolean removeAllSameLayerSameChild) {
 		if(!CheckUtil.paramsAllNotNull(parent,child)){
-			LogUtil.debug(
-					String.format("remove child param invalid,%s", getClassInfo(parent.getClass(), child.getClass())));
 			return;
 		}
 		
@@ -136,8 +136,6 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 	
 	public static <G extends HasChildrenable<G>> void setParent(G child, G parent) {
 		if(!CheckUtil.paramsAllNotNull(child,parent)){
-			LogUtil.debug(
-					String.format("set parent param invalid,%s", getClassInfo(parent.getClass(), child.getClass())));
 			return;
 		}
 
@@ -155,7 +153,9 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 			LogUtil.info("warning! parent's depth is less than 1 , there is error maybe!");
 
 		child.setDepth(parent.getDepth() + 1);
-		DebugUtil.depthMessage("setDrawableParent", child.getDepth(),child.getClass());
+		
+		if(GlobalConfig.DEPTH_INFO_ENABLE)
+			DebugUtil.depthMessage("setDrawableParent", child.getDepth(),child.getClass());
 	}
 
 	/**
@@ -167,10 +167,14 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 		if(!CheckUtil.paramsAllNotNull(parent,child))
 			return;
 
+		if(null == parent.getChildren()){
+			parent.setChildren(new LinkedList<G>());
+		}
 		if (!hasTheChild(parent,child,false)) {
 			parent.addChild(child);
 		} else {
-			DebugUtil.depthMessage("child's depth parent's class", child.getDepth(), parent.getClass());
+			if(GlobalConfig.DEPTH_INFO_ENABLE)
+				DebugUtil.depthMessage("child's depth parent's class", child.getDepth(), parent.getClass());
 		}
 	}
 
@@ -283,6 +287,9 @@ public interface HasChildrenable<T extends HasChildrenable<T>> {
 
 	public static <G extends HasChildrenable> void printInfo(G g) {
 		if (CheckUtil.paramNotNull(g))
-			LogUtil.debug(String.format("depth:%d,%s", g.getDepth(), g.toString()));
+			LogUtil.debug(String.format("depth:%d,class:%s,%s"
+					, g.getDepth()
+					,g.getClass()
+					,g.toString()));
 	}
 }

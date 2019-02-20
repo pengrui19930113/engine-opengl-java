@@ -5,6 +5,7 @@ import java.util.Collection;
 import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.shaders.Shaderable;
 import pengrui.javagl.abstraction.util.DebugUtil;
+import pengrui.javagl.abstraction.util.GlobalConfig;
 import pengrui.javagl.abstraction.util.LogUtil;
 
 /**
@@ -47,7 +48,8 @@ public interface Drawable{
 			} 
 		}
 		
-		DebugUtil.depthInfo(((HasChildrenable<?>)draw).getDepth(), draw.getClass());
+		if(GlobalConfig.DEPTH_INFO_ENABLE)
+			DebugUtil.depthInfo(((HasChildrenable<?>)draw).getDepth(), draw.getClass());
 		
 		if(draw.isEnableDraw())
 			draw.onDraw();
