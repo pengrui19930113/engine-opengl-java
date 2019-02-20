@@ -8,7 +8,6 @@ import org.lwjgl.util.vector.Vector3f;
 import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
 import pengrui.javagl.abstraction.factorys.DrawManagerFactory;
 import pengrui.javagl.abstraction.factorys.InputManagerFactory;
-import pengrui.javagl.abstraction.factorys.LifecycleManagerFactory;
 import pengrui.javagl.abstraction.util.FPSUtil;
 import pengrui.javagl.abstraction.util.LoaderUtil;
 import pengrui.javagl.abstraction.util.LogUtil;
@@ -16,6 +15,7 @@ import pengrui.javagl.abstraction.util.PlatformInterface;
 import pengrui.javagl.abstraction.util.TimeUtil;
 import pengrui.javagl.entitys.Camera;
 import pengrui.javagl.entitys.Light;
+import pengrui.javagl.factory.LifecycleManagerFactory;
 import pengrui.javagl.model.GameModel;
 
 /**

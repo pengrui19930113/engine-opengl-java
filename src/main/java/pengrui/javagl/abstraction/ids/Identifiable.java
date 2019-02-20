@@ -1,9 +1,9 @@
 package pengrui.javagl.abstraction.ids;
 
 //需要 ID 唯一标志的对象实现该接口
-public interface Identifiable {
+public interface Identifiable<T> {
 	
-	void setID(long id);
+	T setID(long id);
 	long getID();
 	
 	public static long genGameObjectID(){
@@ -14,4 +14,7 @@ public interface Identifiable {
 		static long cacheID = 0;
 	}
 	
+	public static long getSceneID(){
+		return 1;//TODO
+	}
 }

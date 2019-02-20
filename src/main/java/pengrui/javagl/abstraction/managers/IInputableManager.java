@@ -1,7 +1,5 @@
 package pengrui.javagl.abstraction.managers;
 
-import java.util.Collection;
-
 import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.cores.Inputable;
 import pengrui.javagl.abstraction.util.LogUtil;
@@ -11,17 +9,19 @@ import pengrui.javagl.abstraction.util.LogUtil;
  *
  */
 public interface IInputableManager extends Manageable<Inputable>{
+	// by Manageable
 	@Override
-	void register(Inputable bean);// by Manageable
+	default void register(Inputable bean){
+		IInputableManager.register(this, bean);
+	}
+	// by Manageable
 	@Override
-	void unregister(Inputable bean);// by Manageable
-	@Override
-	Collection<Inputable> getAll();// by Manageable
-	@Override
-	void init(); // by Lifecyclable
-	@Override
-	void destroy();// by Lifecyclable
-	void inputs();//捕获事件 然后分发事件
+	default void unregister(Inputable bean){
+		IInputableManager.unregister(this, bean);
+	}
+	
+	//捕获事件 然后分发事件
+	void inputs();//每个场景的输入行为都不一样
 	
 	public static void register(IInputableManager im,Inputable bean) {
 		if(HasChildrenable.isOneLevelBean(bean)){
@@ -37,10 +37,6 @@ public interface IInputableManager extends Manageable<Inputable>{
 		}else{
 			LogUtil.debug("is not one level object, ignore unregister");
 		}
-	}
-	
-	public static void destroy(IInputableManager im){
-		Manageable.destroy(im);
 	}
 	
 	public static void inputs(IInputableManager im) {

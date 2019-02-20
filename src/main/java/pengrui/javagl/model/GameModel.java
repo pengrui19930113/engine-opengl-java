@@ -12,9 +12,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import pengrui.javagl.abstraction.animation.Animationable;
 import pengrui.javagl.abstraction.basics.HasChildrenable;
+import pengrui.javagl.abstraction.basics.Lifecyclable;
 import pengrui.javagl.abstraction.cores.Actionable;
 import pengrui.javagl.abstraction.cores.Drawable;
-import pengrui.javagl.abstraction.cores.Lifecyclable;
 import pengrui.javagl.abstraction.factorys.ActionManagerFactory;
 import pengrui.javagl.abstraction.factorys.DrawManagerFactory;
 import pengrui.javagl.abstraction.models.ModelData;
@@ -59,7 +59,7 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 			LogUtil.debug("use default shader");
 		}
 		
-		shader.loadOnceGlslVaraibles();
+//		shader.loadOnceGlslVaraibles();
 	}
 	
 	public int vaoID;

@@ -8,8 +8,9 @@ import org.lwjgl.opengl.GL11;
 
 import pengrui.javagl.abstraction.basics.Factoryable;
 import pengrui.javagl.abstraction.cores.Drawable;
-import pengrui.javagl.abstraction.managers.AbstractDrawManager;
 import pengrui.javagl.abstraction.managers.IDrawableManager;
+import pengrui.javagl.abstraction.managers.Manageable;
+import pengrui.javagl.manager.AbstractDrawManager;
 
 public interface DrawManagerFactory extends Factoryable<IDrawableManager>{
 	public  IDrawableManager instance();
@@ -34,7 +35,7 @@ public interface DrawManagerFactory extends Factoryable<IDrawableManager>{
 		
 		@Override
 		public void destroy() {
-			super.destroy();
+			Manageable.destroy(this);
 			beans = null; //help GC
 		};
 

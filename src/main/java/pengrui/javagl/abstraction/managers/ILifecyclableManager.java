@@ -1,29 +1,28 @@
 package pengrui.javagl.abstraction.managers;
 
-import pengrui.javagl.abstraction.cores.Lifecyclable;
+import pengrui.javagl.abstraction.basics.Lifecyclable;
 
-public interface ILifecyclableManager extends Manageable<Lifecyclable>{
+public interface ILifecyclableManager<T extends Lifecyclable> extends Manageable<T>{
 	
-
-	public static void register(ILifecyclableManager lm,Lifecyclable bean) {
-		Manageable.checkManager(lm);
-		lm.getAll().add(bean);
+	@Override
+	default void init() {
+		ILifecyclableManager.init(this);
 	}
-
-	public static void remove(ILifecyclableManager lm,Lifecyclable bean) {
-		Manageable.checkManager(lm);
-		lm.getAll().remove(bean);
+	
+	@Override
+	default void destroy() {
+		ILifecyclableManager.destroy(this);
 	}
-
-	public static void init(ILifecyclableManager lm) {
+	
+	public static<T extends Lifecyclable> void init(ILifecyclableManager<T> lm) {
 		Manageable.checkManager(lm);
 		for (Lifecyclable lifecycle : lm.getAll()) 
 			lifecycle.init();
 	}
 
-	public static void destroy(ILifecyclableManager lm) {
+	public static <T extends Lifecyclable>void destroy(ILifecyclableManager<T> lm) {
 		Manageable.checkManager(lm);
-		for (Lifecyclable lifecycle : lm.getAll()) 
+		for (T lifecycle : lm.getAll()) 
 			lifecycle.destroy();
 		
 		if(null!=lm.getAll())

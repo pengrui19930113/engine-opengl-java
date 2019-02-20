@@ -1,10 +1,9 @@
 package pengrui.javagl.abstraction.managers;
 
-import java.util.Collection;
-
 import pengrui.javagl.abstraction.basics.HasChildrenable;
 import pengrui.javagl.abstraction.cores.Actionable;
 import pengrui.javagl.abstraction.util.LogUtil;
+import pengrui.javagl.abstraction.util.TimeUtil;
 
 /**
  * 
@@ -14,16 +13,17 @@ import pengrui.javagl.abstraction.util.LogUtil;
  */
 public interface IActionableManager extends Manageable<Actionable>{
 	@Override
-	void register(Actionable bean);// by Manageable
+	default void register(Actionable bean){// by Manageable
+		IActionableManager.register(this, bean);
+	}
 	@Override
-	void unregister(Actionable bean);// by Manageable
-	@Override
-	Collection<Actionable> getAll();// by Manageable
-	@Override
-	void init(); // by Lifecyclable
-	@Override
-	void destroy();// by Lifecyclable
-	void actions();
+	default void unregister(Actionable bean){// by Manageable
+		IActionableManager.unregister(this, bean);
+	}
+	
+	default void actions(){
+		IActionableManager.actions(this, TimeUtil.getDelteTime());
+	}
 	
 	public static <T extends Actionable>
 		void register(IActionableManager am,Actionable bean){
@@ -40,10 +40,6 @@ public interface IActionableManager extends Manageable<Actionable>{
 		}else{
 			LogUtil.debug("is not one level object, ignore remove");
 		}
-	}
-	
-	public static void destroy(IActionableManager am){
-		Manageable.destroy(am);
 	}
 	
 	public static void actions(IActionableManager am,long delteTime){

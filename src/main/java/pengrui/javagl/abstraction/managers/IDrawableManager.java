@@ -1,7 +1,5 @@
 package pengrui.javagl.abstraction.managers;
 
-import java.util.Collection;
-
 import org.lwjgl.opengl.GL11;
 
 import pengrui.javagl.abstraction.basics.HasChildrenable;
@@ -9,17 +7,20 @@ import pengrui.javagl.abstraction.cores.Drawable;
 import pengrui.javagl.abstraction.util.LogUtil;
 
 public interface IDrawableManager extends Manageable<Drawable>{
+	
+	default void draws(){
+		IDrawableManager.draws(this);
+	}
+	
 	@Override
-	void register(Drawable bean);// by Manageable
+	default void register(Drawable bean) {
+		IDrawableManager.register(this, bean);
+	}
+	
 	@Override
-	void unregister(Drawable bean);// by Manageable
-	@Override
-	Collection<Drawable> getAll();// by Manageable
-	@Override
-	void init(); // by Lifecyclable
-	@Override
-	void destroy();// by Lifecyclable
-	void draws();
+	default void unregister(Drawable bean) {
+		IDrawableManager.unregister(this, bean);
+	}
 	
 	public static void register(IDrawableManager dm,Drawable bean) {
 		if(HasChildrenable.isOneLevelBean(bean)){
@@ -37,10 +38,6 @@ public interface IDrawableManager extends Manageable<Drawable>{
 		}
 	}
 	
-	public static void destroy(IDrawableManager am){
-		Manageable.destroy(am);
-	}
-
 	public static void draws(IDrawableManager dm) {
 		Manageable.checkManager(dm);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT

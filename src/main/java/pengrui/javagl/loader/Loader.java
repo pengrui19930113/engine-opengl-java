@@ -17,10 +17,9 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import pengrui.javagl.abstraction.AbstractLifecycle;
 import pengrui.javagl.texture.ImageType;
 
-public class Loader extends AbstractLifecycle{
+public class Loader{
 	
 	List<Integer> vaos = new ArrayList<Integer>();
 	List<Integer> vbos = new ArrayList<Integer>();
@@ -51,7 +50,7 @@ public class Loader extends AbstractLifecycle{
 		return -1;
 	}
 	
-	private void cleanUp(){
+	public void cleanUp(){
 		for(int vao:vaos)
 			GL30.glDeleteVertexArrays(vao);
 		
@@ -149,13 +148,5 @@ public class Loader extends AbstractLifecycle{
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
-	}
-	@Override
-	public void init() {
-		//nothing
-	}
-	@Override
-	public void destroy() {
-		cleanUp();
 	}
 }

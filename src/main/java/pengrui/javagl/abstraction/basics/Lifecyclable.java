@@ -1,4 +1,4 @@
-package pengrui.javagl.abstraction.cores;
+package pengrui.javagl.abstraction.basics;
 
 public interface Lifecyclable {
 	void init();

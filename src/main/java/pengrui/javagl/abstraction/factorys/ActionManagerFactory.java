@@ -6,8 +6,9 @@ import java.util.Set;
 
 import pengrui.javagl.abstraction.basics.Factoryable;
 import pengrui.javagl.abstraction.cores.Actionable;
-import pengrui.javagl.abstraction.managers.AbstractActionManager;
 import pengrui.javagl.abstraction.managers.IActionableManager;
+import pengrui.javagl.abstraction.managers.Manageable;
+import pengrui.javagl.manager.AbstractActionManager;
 
 public interface ActionManagerFactory extends Factoryable<IActionableManager>{
 	
@@ -24,7 +25,7 @@ public interface ActionManagerFactory extends Factoryable<IActionableManager>{
 		
 		@Override
 		public void destroy() {
-			super.destroy();
+			Manageable.destroy(this);
 			beans = null; //help GC
 		}
 

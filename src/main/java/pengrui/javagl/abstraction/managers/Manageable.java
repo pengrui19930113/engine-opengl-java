@@ -2,7 +2,7 @@ package pengrui.javagl.abstraction.managers;
 
 import java.util.Collection;
 
-import pengrui.javagl.abstraction.cores.Lifecyclable;
+import pengrui.javagl.abstraction.basics.Lifecyclable;
 import pengrui.javagl.abstraction.util.CheckUtil;
 
 public interface Manageable<T> extends Lifecyclable {
@@ -11,9 +11,14 @@ public interface Manageable<T> extends Lifecyclable {
 	 * 当前设计register 所注册的管理对象必须是1级别的 否则抛异常 后续可能更改
 	 * @param bean
 	 */
-	void register(T bean);
-	void unregister(T bean);
+	default void register(T bean){
+		Manageable.register(this, bean);
+	}
+	default void unregister(T bean){
+		Manageable.unregister(this, bean);
+	}
 	Collection<T> getAll();
+//	void setAll(Collection<T> all);//TODO 后续看是否需要
 	void init(); // by Lifecyclable
 	void destroy();// by Lifecyclable
 	
@@ -34,6 +39,7 @@ public interface Manageable<T> extends Lifecyclable {
 		checkManager(manager);
 		if (CheckUtil.paramNotNull(bean)) 
 			manager.getAll().add(bean);
+		
 	}
 	
 	public static <T> void destroy(Manageable<T> manager) {

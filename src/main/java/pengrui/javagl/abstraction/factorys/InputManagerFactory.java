@@ -8,8 +8,9 @@ import pengrui.javagl.abstraction.basics.Factoryable;
 import pengrui.javagl.abstraction.cores.Inputable;
 import pengrui.javagl.abstraction.events.AbstractEvent;
 import pengrui.javagl.abstraction.events.IEvent;
-import pengrui.javagl.abstraction.managers.AbstractInputManager;
 import pengrui.javagl.abstraction.managers.IInputableManager;
+import pengrui.javagl.abstraction.managers.Manageable;
+import pengrui.javagl.manager.AbstractInputManager;
 
 public interface InputManagerFactory extends Factoryable<IInputableManager>{
 	
@@ -29,7 +30,7 @@ public interface InputManagerFactory extends Factoryable<IInputableManager>{
 		
 		@Override
 		public void destroy() {
-			super.destroy();
+			Manageable.destroy(this);
 			beans = null; // help GC
 		}
 		
