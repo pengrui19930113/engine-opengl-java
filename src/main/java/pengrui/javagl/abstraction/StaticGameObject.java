@@ -9,10 +9,11 @@ import pengrui.javagl.abstraction.factorys.InputManagerFactory;
  * @author Administrator
  *
  */
-public class StaticGameObject  
+public abstract class StaticGameObject  
 		extends GenericGameObject{
 
 	public StaticGameObject() {
+		enableDraw = true;
 		InputManagerFactory.getInstance().unregister(this);
 		ActionManagerFactory.getInstance().unregister(this);
 	}
@@ -28,20 +29,12 @@ public class StaticGameObject
 	}
 
 	@Override
-	public void onDraw() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void onAction(long delteTime) {
-		// TODO Auto-generated method stub
-		
+		//nothing
 	}
 
 	@Override
 	public void onInput(IEvent evn) {
-		// TODO Auto-generated method stub
-		
+		//nothing;
 	}
 }

@@ -20,7 +20,11 @@ public interface Inputable{
 	
 	boolean isEnableInput();
 	void setEnableInput(boolean en);
-	void inputs(IEvent evn);
+	
+	default void inputs(IEvent evn){
+		Inputable.inputs(this, evn);
+	}
+	
 	void onInput(IEvent evn);
 	boolean isEnableChildrenInput();
 	void setEnableChildrenInput(boolean en);
@@ -50,6 +54,13 @@ public interface Inputable{
 				return ;
 			}
 		}
+		
+		if(GlobalConfig.DEPTH_INFO_ENABLE)
+			DebugUtil.depthInfo(((HasChildrenable<?>)input).getDepth(), input.getClass());
+		
+		if(input.isEnableInput())
+			input.onInput(evn);
+		
 		if(!(input instanceof HasChildrenable)){
 			LogUtil.info("draw not instance of the HasChildrenable ,return");
 			return;
@@ -66,11 +77,5 @@ public interface Inputable{
 					child.inputs(evn);
 			} 
 		}
-		
-		if(GlobalConfig.DEPTH_INFO_ENABLE)
-			DebugUtil.depthInfo(((HasChildrenable<?>)input).getDepth(), input.getClass());
-		
-		if(input.isEnableInput())
-			input.onInput(evn);
 	}
 }

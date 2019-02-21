@@ -21,7 +21,10 @@ public interface Actionable {
 	
 	boolean isEnableAction();
 	void setEnableAction(boolean en);
-	void actions(long delteTime);//循环处理子节点
+	//循环处理子节点
+	default void actions(long delteTime){
+		Actionable.actions(this, delteTime);
+	}
 	void onAction(long delteTime); // 更新显示状态， 比如做动画的时候就需要通过该函数改变当前显示动画模型的哪一帧
 	boolean isEnableChildrenAction();
 	void setEnableChildrenAction(boolean en);
@@ -44,22 +47,7 @@ public interface Actionable {
 			return ;
 		}
 		
-		if(!(action instanceof HasChildrenable)){
-			LogUtil.info("action not instance of the HasChildrenable , return");
-			return;
-		}
-		Collection<Actionable> children = (Collection<Actionable>) ((HasChildrenable<?>)action).getChildren();
-		if(null!=children && !children.isEmpty()&&action.isEnableChildrenAction()){
-			for (Actionable child : children){
-				if(!(child instanceof Actionable)){
-					LogUtil.info("child is not instance of the Actionable , return");
-					return;
-				}
-				if(child.isEnableAction())
-					child.actions(delteTime);
-			}
-		}
-		
+
 		if(GlobalConfig.DEPTH_INFO_ENABLE)
 			DebugUtil.depthInfo(((HasChildrenable<?>)action).getDepth(), action.getClass());
 		
@@ -70,6 +58,23 @@ public interface Actionable {
 					ani.onAnimation();
 				
 			action.onAction(delteTime);
+		}
+		
+		if(!(action instanceof HasChildrenable)){
+			LogUtil.info("action not instance of the HasChildrenable , return");
+			return;
+		}
+		
+		Collection<Actionable> children = (Collection<Actionable>) ((HasChildrenable<?>)action).getChildren();
+		if(null!=children && !children.isEmpty()&&action.isEnableChildrenAction()){
+			for (Actionable child : children){
+				if(!(child instanceof Actionable)){
+					LogUtil.info("child is not instance of the Actionable , return");
+					return;
+				}
+				if(child.isEnableAction())
+					child.actions(delteTime);
+			}
 		}
 	}
 	

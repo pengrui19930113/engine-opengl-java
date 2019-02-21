@@ -18,7 +18,11 @@ public interface Drawable{
 	
 	boolean isEnableDraw();
 	void setEnableDraw(boolean en);
-	void draws();
+	
+	default void draws(){
+		Drawable.draws(this);
+	}
+	
 	void onDraw();
 	boolean isEnableDrawChildren();
 	void setEnableDrawChildren(boolean en);
@@ -27,10 +31,17 @@ public interface Drawable{
 	void setShader(Shaderable shader);
 	
 	public static void draws(Drawable draw){
+		
 		if(null == draw){
 			LogUtil.debug("draw is null, invalid draws");
 			return ;
 		}
+
+		if(GlobalConfig.DEPTH_INFO_ENABLE)
+			DebugUtil.depthInfo(((HasChildrenable<?>)draw).getDepth(), draw.getClass());
+		
+		if(draw.isEnableDraw())
+			draw.onDraw();
 		
 		if(!(draw instanceof HasChildrenable)){
 			LogUtil.info("draw not instance of the HasChildrenable ,return");
@@ -47,11 +58,5 @@ public interface Drawable{
 					child.draws();
 			} 
 		}
-		
-		if(GlobalConfig.DEPTH_INFO_ENABLE)
-			DebugUtil.depthInfo(((HasChildrenable<?>)draw).getDepth(), draw.getClass());
-		
-		if(draw.isEnableDraw())
-			draw.onDraw();
 	}
 }

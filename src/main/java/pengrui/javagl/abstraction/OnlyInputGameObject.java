@@ -7,10 +7,21 @@ public abstract class OnlyInputGameObject extends GenericGameObject{
 	
 	
 	public OnlyInputGameObject() {
+		
+		enableInput = true;
 		ActionManagerFactory.getInstance().unregister(this);
 		DrawManagerFactory.getInstance().unregister(this);
 	}
-
+	
+	@Override
+	public boolean isEnableInput() {
+		return false;
+	}
+	@Override
+	public boolean isEnableAction() {
+		return false;
+	}
+	
 	@Override
 	public void onDraw() {
 		//nothing
@@ -21,13 +32,4 @@ public abstract class OnlyInputGameObject extends GenericGameObject{
 		//nothing
 	}
 	
-	@Override
-	public boolean isEnableInput() {
-		return true;
-	}
-	
-	@Override
-	public boolean isEnableChildrenInput() {
-		return true;
-	}
 }

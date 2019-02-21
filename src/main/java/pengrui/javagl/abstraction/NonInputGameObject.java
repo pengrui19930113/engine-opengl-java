@@ -8,27 +8,17 @@ import pengrui.javagl.abstraction.factorys.InputManagerFactory;
  * @author Administrator
  *
  */
-public class NonInputGameObject extends GenericGameObject{
+public abstract class NonInputGameObject extends GenericGameObject{
 	
 	public NonInputGameObject() {
+		
+		enableDraw = true;
+		enableAction = true;
 		InputManagerFactory.getInstance().unregister(this);
 	}
 
 	@Override
-	public void onDraw() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onAction(long delteTime) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void onInput(IEvent evn) {
-		// TODO Auto-generated method stub
-		
+		//nothing
 	}
 }
