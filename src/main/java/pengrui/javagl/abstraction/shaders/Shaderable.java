@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -14,11 +17,19 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import pengrui.javagl.abstraction.basics.Cleanable;
+import pengrui.javagl.abstraction.basics.Lifecyclable;
+import pengrui.javagl.abstraction.util.CheckUtil;
+import pengrui.javagl.abstraction.util.ExceptionUtil;
+import pengrui.javagl.abstraction.util.GlslUtil;
+import pengrui.javagl.abstraction.util.LogUtil;
+import pengrui.javagl.abstraction.util.ReflectionUtil;
 
 
-public interface Shaderable extends Cleanable
-//extends Lifecyclable
+public interface Shaderable extends Cleanable, Lifecyclable
 {
+	
+	default public void init() {};//TODOs
+	default public void destroy() {this.cleanup();};
 	
 	int getProgramID();
 	void setProgramID(int proid);
@@ -30,14 +41,62 @@ public interface Shaderable extends Cleanable
 	int getGeometryShaderID();
 	void setGeometryShaderID(int gsid);
 	
-	void useShader();
-	void unuseShader();
+	default void useShader(){
+		Shaderable.useShader(this);
+	}
+	default void unuseShader(){
+		Shaderable.unuseShader(this);
+	}
+	
 	void loadOnceGlslVaraibles(Object ...varaibles);
 	void loadGlslVaraibles(Object ...varaibles);
-	void bindAttributes();
-	void getAllUniformLocations();
-//	boolean hasMultiTextureUnit();
 	
+	default void bindAttributes(){
+			VertexAttributeBinding vab = ReflectionUtil.getTargetAnnotation(this.getClass(),VertexAttributeBinding.class );
+			ExceptionUtil.ifNullThrowRuntimeException(vab
+					, String.format("%s missing %s annotation"
+							,this.getClass()
+							, VertexAttributeBinding.class));
+			
+			int[] layoutIndex = vab.layoutIndex();
+			String[] attrVaribles = vab.attrName();
+			checkInvalidAnnotParam(layoutIndex, attrVaribles);
+			for(int i=0;i<attrVaribles.length;++i){
+				Shaderable.bindAttribute(this,layoutIndex[i], attrVaribles[i]);
+			}
+	}
+	/**
+	 * 最开始没有封装是这样的
+	 * {@link #getAndSetUniformLocation}
+	 */
+	default void getAllUniformLocations() {
+		GlslUtil.processLocation(
+				this
+				, this.getClass()
+				, UniformLocationBinding.class
+				, x-> x.value()
+				);
+	}
+	
+	public static void checkInvalidAnnotParam(int[] layoutIndex, String[] attrVaribles){
+		if(layoutIndex.length!=attrVaribles.length){
+			class LayoutIndexNotMatchGLSLVaraible extends RuntimeException{
+				private static final long serialVersionUID = 7375067513142652672L;
+				public LayoutIndexNotMatchGLSLVaraible(String msg) {
+					super(msg);
+				}
+			}
+			throw new LayoutIndexNotMatchGLSLVaraible
+					(String.format(
+							"index count not match the glsl attribute varaible\n:layoutIndex:%s\nglsl varaibles:%s"
+							,Arrays.stream(layoutIndex).mapToObj(i->i).collect(Collectors.toList()).toString()
+							,Arrays.asList(attrVaribles).toString()));
+		}
+	}
+//	boolean hasMultiTextureUnit();
+	default void cleanup(){
+		Shaderable.cleanup(this);
+	}
 	
 	public static void init(Shaderable shader,InputStream vsis,InputStream fsis){
 		init(shader,vsis,fsis,null);
@@ -95,15 +154,22 @@ public interface Shaderable extends Cleanable
 		return shaderID;
 	}
 	public static void useShader(Shaderable shader){
-		GL20.glUseProgram(shader.getProgramID());
+		if(CheckUtil.paramNotNull(shader))
+			GL20.glUseProgram(shader.getProgramID());
 	}
 	public static void unuseShader(Shaderable shader){
-		GL20.glUseProgram(0);
+		if(CheckUtil.paramNotNull(shader))
+			GL20.glUseProgram(0);
 	}
 	
-	public static void destroy(Shaderable shader){
-		if(0 == shader.getProgramID())
+	public static void cleanup(Shaderable shader){
+		if(!CheckUtil.paramNotNull(shader)) 
 			return;
+		
+		if(0 == shader.getProgramID()){
+			LogUtil.debug("shader programID is 0 , ignore cleanup");
+			return;
+		}
 		
 		shader.unuseShader();
 		if(0!= shader.getFragmentShaderID()){
@@ -158,8 +224,29 @@ public interface Shaderable extends Cleanable
 		GL20.glUniform3f(location, a,b,c);
 	}
 	
-	
 	public static int getUniformLocation(Shaderable shader,String uniformName){
 		return GL20.glGetUniformLocation(shader.getProgramID(),uniformName);
+	}
+	
+	static void getAndSetUniformLocation(Shaderable shader){
+		if(!CheckUtil.paramNotNull(shader))
+			return;
+		
+		Class<UniformLocationBinding> annotationClass = UniformLocationBinding.class;
+		for (Field f : ReflectionUtil.findFieldByAnnotation(shader.getClass(), annotationClass)) {
+			try {
+				f.setAccessible(true);
+				UniformLocationBinding annotation = f.getAnnotation(annotationClass);
+				ExceptionUtil.ifNullThrowRuntimeException(annotation
+						, String.format("%s missing %s annotation"
+						,shader.getClass()
+						, UniformLocationBinding.class));//
+				String glslVaraibleName = annotation.value();
+				f.set(shader , Shaderable.getUniformLocation(shader , glslVaraibleName));
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		}
 	}
 }

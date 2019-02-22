@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import pengrui.javagl.abstraction.shaders.Shaderable;
 
 public class GlslUtil {
+	
 	public static interface ValueHolder<T extends Annotation>{
 		String value(T u);
 	}
