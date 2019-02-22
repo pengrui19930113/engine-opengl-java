@@ -11,7 +11,7 @@ public class GlslUtil {
 	}
 	
 	/**
-	 * 将着色器
+	 * 获取色器的location变量保存在shader中，为后面的绑定uniform做准备
 	 * @param target
 	 * @param targetClazz
 	 * @param annoClazz

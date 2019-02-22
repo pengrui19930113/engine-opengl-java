@@ -89,10 +89,10 @@ public class GameModel implements HasChildrenable<GameModel>,Drawable,Actionable
 		return vars;
 	}
 	Object[] glslVaraibleHolder;
-	
-	public Object[] getGlslVaraibles(){
-		return assembleGlslVaraible();
-	}
+//	
+//	public Object[] getGlslVaraibles(){
+//		return assembleGlslVaraible();
+//	}
 	@Override
 	public void onDraw() {
 		this.shader.useShader();

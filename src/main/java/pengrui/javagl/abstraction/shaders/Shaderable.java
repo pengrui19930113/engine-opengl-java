@@ -36,6 +36,8 @@ public interface Shaderable extends Cleanable
 	void loadGlslVaraibles(Object ...varaibles);
 	void bindAttributes();
 	void getAllUniformLocations();
+//	boolean hasMultiTextureUnit();
+	
 	
 	public static void init(Shaderable shader,InputStream vsis,InputStream fsis){
 		init(shader,vsis,fsis,null);
@@ -140,6 +142,10 @@ public interface Shaderable extends Cleanable
 		GL20.glUniform1f(location, toLoad);
 	}
 	
+	public static void loadInteger(int location,int value){
+		GL20.glUniform1i(location, value);
+	}
+	
 	public static void loadFloat(int location,float value){
 		GL20.glUniform1f(location, value);
 	}
@@ -148,9 +154,10 @@ public interface Shaderable extends Cleanable
 		GL20.glUniform3f(location, v.x, v.y, v.z);
 	}
 	
-	public static void lodVector3f(int location ,float a,float b,float c){
+	public static void loadVector3f(int location ,float a,float b,float c){
 		GL20.glUniform3f(location, a,b,c);
 	}
+	
 	
 	public static int getUniformLocation(Shaderable shader,String uniformName){
 		return GL20.glGetUniformLocation(shader.getProgramID(),uniformName);

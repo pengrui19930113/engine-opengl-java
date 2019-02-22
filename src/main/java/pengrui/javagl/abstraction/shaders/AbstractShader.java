@@ -71,6 +71,7 @@ public abstract class AbstractShader implements Shaderable {
 			printUniformMessage();
 			LogUtil.reline();
 			printVertexAttributeMessage();
+			LogUtil.reline();
 		}
 	}
 	
